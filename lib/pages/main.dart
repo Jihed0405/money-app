@@ -32,7 +32,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: buildTabContent(_currentPageIndex),
+      body: getBody(),
       floatingActionButton: FloatingActionButton(
         child: Container(
           width: 60,
@@ -57,13 +57,32 @@ class _MainScreenState extends State<MainScreen> {
           child: const Icon(Icons.add),
         ),
         //backgroundColor: LinearGradient(colors: [Color(0xFFce68f8),Color(0xFF8086f2),Color(0xFFf18991),Color(0xFFf48d87)),
-        onPressed: () {},
+        onPressed: () {
+          setTabs(4);
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: getFooter(),
     );
   }
-
+Widget getBody(){
+return IndexedStack(
+  index: _currentPageIndex,
+  children: [
+   
+          const Home(),
+      
+        const Stats(),
+         Container(),
+      
+         const Profile(),
+      
+         Container(
+          child: Text( "add some expenses"),
+         ),
+  ],
+);
+}
   Widget getFooter() {
     List<IconData> iconItems = [
       Icons.home,
@@ -82,10 +101,18 @@ class _MainScreenState extends State<MainScreen> {
         leftCornerRadius: 10,
         iconSize: 25,
         rightCornerRadius: 10,
-        onTap: (index) =>
-          setState(() =>
-            _currentPageIndex = index
-          ),
+        onTap: (index) {        
+          setTabs(index);});
+  }
+  setTabs(index){
+ setState(() {
+            _currentPageIndex = index;
+ }
+  
+        
         );
   }
-}
+ 
+          
+        
+} 
