@@ -1,5 +1,6 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_money_app/pages/add.dart';
 import 'package:flutter_money_app/pages/home.dart';
 import 'package:flutter_money_app/pages/profile.dart';
 import 'package:flutter_money_app/pages/stats.dart';
@@ -14,20 +15,6 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   var _currentPageIndex = 0;
-  Widget buildTabContent(int index) {
-    switch (index) {
-      case 0:
-        return const Home();
-      case 1:
-        return const Stats();
-      case 2:
-        return Container();
-      case 3:
-        return const Profile();
-      default:
-        return const Home();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,24 +52,20 @@ class _MainScreenState extends State<MainScreen> {
       bottomNavigationBar: getFooter(),
     );
   }
-Widget getBody(){
-return IndexedStack(
-  index: _currentPageIndex,
-  children: [
-   
-          const Home(),
-      
+
+  Widget getBody() {
+    return IndexedStack(
+      index: _currentPageIndex,
+      children: [
+        const Home(),
         const Stats(),
-         Container(),
-      
-         const Profile(),
-      
-         Container(
-          child: Text( "add some expenses"),
-         ),
-  ],
-);
-}
+        Container(),
+        const Profile(),
+        const AddWidget(),
+      ],
+    );
+  }
+
   Widget getFooter() {
     List<IconData> iconItems = [
       Icons.home,
@@ -101,18 +84,14 @@ return IndexedStack(
         leftCornerRadius: 10,
         iconSize: 25,
         rightCornerRadius: 10,
-        onTap: (index) {        
-          setTabs(index);});
+        onTap: (index) {
+          setTabs(index);
+        });
   }
-  setTabs(index){
- setState(() {
-            _currentPageIndex = index;
- }
-  
-        
-        );
+
+  setTabs(index) {
+    setState(() {
+      _currentPageIndex = index;
+    });
   }
- 
-          
-        
-} 
+}
