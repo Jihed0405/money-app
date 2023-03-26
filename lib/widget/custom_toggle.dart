@@ -13,7 +13,7 @@ class CustomToggle extends StatefulWidget {
       this.bgColor = Colors.green})
       : super(key: key);
   @override
-  _CustomToggleState createState() => _CustomToggleState();
+  State<CustomToggle> createState() => _CustomToggleState();
 }
 
 class _CustomToggleState extends State<CustomToggle> {
