@@ -19,6 +19,7 @@ class AddWidget extends StatefulWidget {
 }
 
 class _AddWidgetState extends State<AddWidget> {
+  
   List<bool> isSelected = <bool>[true, false];
   bool vertical = false;
   late TextEditingController _controller;
@@ -41,6 +42,8 @@ class _AddWidgetState extends State<AddWidget> {
 
   @override
   Widget build(BuildContext context) {
+   double defaultWidth = MediaQuery.of(context).size.width; 
+   double defaultHeight = MediaQuery.of(context).size.height;
     return SingleChildScrollView(
       child: SafeArea(
         child: Column(
@@ -99,55 +102,68 @@ class _AddWidgetState extends State<AddWidget> {
                 ),
               ),
               const SizedBox(
-                height: defaultSpacing * 4,
+                height: defaultSpacing * 2,
               ),
             ]),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Amount',
+            Container(
+          child: TextField(
+                  decoration: const InputDecoration(
+                  focusedBorder:  OutlineInputBorder(
+                  borderSide: BorderSide(
+                  color: Colors.white,
+                  width: 1.0
+                      )
                     ),
-                    keyboardType: defaultTargetPlatform == TargetPlatform.iOS
-                        ? const TextInputType.numberWithOptions(
-                            decimal: true, signed: true)
-                        : const TextInputType.numberWithOptions(decimal: true),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(
-                          RegExp(r'^(\d+)?\.?\d{0,2}'))
-                    ],
-                    controller: _controller,
-                    onSubmitted: (String value) async {},
-                  ),
-                ),
-              ],
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.white,
+                        width: 1.0
+                      )
+                    ),
+                                border: InputBorder.none,
+                                hintText: 'Amount',
+                                                 ),
+                                                 keyboardType: defaultTargetPlatform == TargetPlatform.iOS
+                                  ? const TextInputType.numberWithOptions(
+                                      decimal: true, signed: true)
+                                  : const TextInputType.numberWithOptions(decimal: true),
+                                                 inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'^(\d+)?\.?\d{0,2}'))
+                                                 ],
+                                                 controller: _controller,
+                                                 onSubmitted: (String value) async {},
+                                               ),
             ),
-            Row(
+                
+             
+             Row(
               children: [
-              Expanded(child: DropdownButton<String>(
-      value: dropdownValue,
-      icon: const Icon(Icons.arrow_downward),
-      elevation: 16,
-      style: const TextStyle(color: Colors.deepPurple),
-      underline: Container(
-        height: 2,
-        color: Colors.deepPurpleAccent,
-      ),
-      onChanged: (String? value) {
-        // This is called when the user selects an item.
-        setState(() {
-          dropdownValue = value!;
-        });
-      },
-      items: list.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-    ),),]
+              Padding(
+                padding: const EdgeInsets.all(defaultSpacing),
+                child: DropdownButton<String>(
+                    value: dropdownValue,
+                    icon: const Icon(Icons.arrow_downward),
+                    elevation: 16,
+                    style: const TextStyle(color: Colors.deepPurple),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                    onChanged: (String? value) {
+                      // This is called when the user selects an item.
+                      setState(() {
+                        dropdownValue = value!;
+                      });
+                    },
+                    items: list.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+              ),]
   ,),  
         Row(
               children: [
@@ -188,12 +204,13 @@ class _AddWidgetState extends State<AddWidget> {
                 ),
               ],
             ),
-            
-              ],
+             ],
             ),
           
-        ),
-      );
+            ),
+          
+        );
+      
     
   }
 }

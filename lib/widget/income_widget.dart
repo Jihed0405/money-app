@@ -8,6 +8,7 @@ class IncomeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return SingleChildScrollView(
       child: Container(
         decoration: BoxDecoration(

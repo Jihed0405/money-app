@@ -17,11 +17,14 @@ class CustomToggle extends StatefulWidget {
 }
 
 class _CustomToggleState extends State<CustomToggle> {
+
   @override
   Widget build(BuildContext context) {
+   double defaultWidth = MediaQuery.of(context).size.width;   
+   double defaultHeight = MediaQuery.of(context).size.height;
     return Container(
-      width: 150,
-      height: 60,
+      width: defaultWidth/3,
+      height: defaultHeight/13,
       decoration: BoxDecoration(
         gradient: widget.isSelected
             ? const LinearGradient(
@@ -39,7 +42,7 @@ class _CustomToggleState extends State<CustomToggle> {
                     Color(0xFFd676db),
                     Color(0xFFf88568)
                   ])
-            : LinearGradient(colors: [background, Colors.white]),
+            : const LinearGradient(colors: [background, Colors.white]),
         border: widget.isSelected
             ? Border.all(
                 //color: const Color.fromARGB(255, 18, 32, 47),
