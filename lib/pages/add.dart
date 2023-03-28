@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../utils/constants.dart';
 import '../widget/custom_toggle.dart';
-
+import 'dart:async';
 const List<String> listCategory = <String>[
   'Fashion',
   'Grocery',
@@ -26,6 +26,7 @@ const List<String> listIncome = <String>[
   "Government Payments"
 ];
 const List<String> listRecurrence = <String>[
+  'None',
   'Daily',
   'weekly',
   'monthly',
@@ -42,9 +43,23 @@ class AddWidget extends StatefulWidget {
 class _AddWidgetState extends State<AddWidget> {
   List<bool> isSelected = <bool>[true, false];
   bool _expenses = false;
-
+DateTime selectedDate= DateTime.now();
+ Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        _controllerDate.text="${selectedDate.toLocal()}".split(' ')[0];
+      });
+    }
+  }
   late TextEditingController _controllerAmount;
   late TextEditingController _controllerNote;
+  late TextEditingController _controllerDate;
   String dropdownValueExpenses = listCategory.first;
   String dropdownValueIncome = listIncome.first;
   String dropdownValueRecurrence = listRecurrence.first;
@@ -53,6 +68,7 @@ class _AddWidgetState extends State<AddWidget> {
     super.initState();
     _controllerAmount = TextEditingController();
     _controllerNote = TextEditingController();
+    _controllerDate = TextEditingController();
     _expenses = false;
   }
 
@@ -60,6 +76,7 @@ class _AddWidgetState extends State<AddWidget> {
   void dispose() {
     _controllerAmount.dispose();
     _controllerNote.dispose();
+    _controllerDate.dispose();
     super.dispose();
   }
 
@@ -178,46 +195,13 @@ class _AddWidgetState extends State<AddWidget> {
                               RegExp(r'^(\d+)?\.?\d{0,2}'))
                         ],
                         controller: _controllerAmount,
-                        onSubmitted: (String value) async {},
+                        onSubmitted: (String value) async {
+
+                        },
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(30),
-                          boxShadow: [
-                            BoxShadow(
-                                blurRadius: 10,
-                                spreadRadius: 7,
-                                offset: const Offset(1, 1),
-                                color: Colors.grey.withOpacity(0.2))
-                          ]),
-                      child: TextField(
-                        enableSuggestions: false,
-                        decoration: InputDecoration(
-                          hintText: 'Note',
-                          prefixIcon: Icon(
-                            Icons.note_rounded,
-                            color: Colors.red[200],
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: const BorderSide(
-                                  color: Colors.white, width: 0.0
-                                  )),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: const BorderSide(
-                                  color: Colors.white, width: 1.0)),
-                          border: InputBorder.none,
-                        ),
-                        controller: _controllerNote,
-                        onSubmitted: (String value) async {},
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Container(
+                       Container(
                       width: defaultWidth,
                       height: defaultHeight / 10,
                       decoration: BoxDecoration(
@@ -232,13 +216,14 @@ class _AddWidgetState extends State<AddWidget> {
                                 color: Colors.grey.withOpacity(0.2))
                           ]),
                       child: Column(
+                        
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(
                                 left: defaultSpacing, top: defaultSpacing / 2),
-                            child: Text("Reccurrence",
+                            child: Text("Recurrence",
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyLarge!
@@ -255,6 +240,7 @@ class _AddWidgetState extends State<AddWidget> {
                                     color: fontSubHeading,
                                   ),
                                   focusedBorder: UnderlineInputBorder(
+                                    
                                       borderSide: BorderSide(
                                           color: Colors.white, width: 1.0)),
                                   enabledBorder: UnderlineInputBorder(
@@ -294,6 +280,91 @@ class _AddWidgetState extends State<AddWidget> {
                         ],
                       ),
                     ),
+                      const SizedBox(height: 20),
+ Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(30),
+                          boxShadow: [
+                            BoxShadow(
+                                blurRadius: 10,
+                                spreadRadius: 7,
+                                offset: const Offset(1, 1),
+                                color: Colors.grey.withOpacity(0.2))
+                          ]),
+                      child:Row(
+                         children: <Widget>[
+                          IconButton( icon:
+                         Icon(Icons.date_range_sharp,color: Colors.blue[300],),
+                          
+                            onPressed:()=>
+                            _selectDate(context),
+                            
+                          ),
+                          
+                            
+                           Expanded(
+                             child: TextField(
+                              enableSuggestions: false,
+                              decoration: InputDecoration(
+                                hintText: 'Date',
+                                enabled: false,
+                                         
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: const BorderSide(
+                                        color: Colors.white, width: 0.0
+                                        )),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: const BorderSide(
+                                        color: Colors.white, width: 1.0)),
+                                border: InputBorder.none,
+                              ),
+                              controller: _controllerDate,
+                              onSubmitted: (String value) async {},
+                                                 ),
+                           ),
+                         ],
+                       ),
+                    ),
+                      const SizedBox(height: 20),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(30),
+                          boxShadow: [
+                            BoxShadow(
+                                blurRadius: 10,
+                                spreadRadius: 7,
+                                offset: const Offset(1, 1),
+                                color: Colors.grey.withOpacity(0.2))
+                          ]),
+                      child: TextField(
+                        enableSuggestions: false,
+                        decoration: InputDecoration(
+                          hintText: 'Note',
+                          prefixIcon: Icon(
+                            Icons.note_rounded,
+                            color: Colors.red[200],
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: const BorderSide(
+                                  color: Colors.white, width: 0.0
+                                  )),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: const BorderSide(
+                                  color: Colors.white, width: 1.0)),
+                          border: InputBorder.none,
+                        ),
+                        controller: _controllerNote,
+                        onSubmitted: (String value) async {},
+                      ),
+                    ),
+                  
+                 
                     const SizedBox(height: 20),
                     Container(
                       width: defaultWidth,
