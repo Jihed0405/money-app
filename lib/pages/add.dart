@@ -43,43 +43,61 @@ class AddWidget extends StatefulWidget {
 class _AddWidgetState extends State<AddWidget> {
   List<bool> isSelected = <bool>[true, false];
   bool _expenses = false;
-DateTime selectedDate= DateTime.now();
+DateTime _selectedDate= DateTime.now();
  Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
-        initialDate: selectedDate,
+        initialDate: _selectedDate,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
-    if (picked != null && picked != selectedDate) {
+    if (picked != null && picked != _selectedDate) {
       setState(() {
-        selectedDate = picked;
-        _controllerDate.text="${selectedDate.toLocal()}".split(' ')[0];
+        _selectedDate = picked;
+        _dateController.text="${_selectedDate.toLocal()}".split(' ')[0];
       });
     }
   }
-  late TextEditingController _controllerAmount;
-  late TextEditingController _controllerNote;
-  late TextEditingController _controllerDate;
+  late TextEditingController _amountController;
+  late TextEditingController _noteController;
+  late TextEditingController _dateController;
   String dropdownValueExpenses = listCategory.first;
   String dropdownValueIncome = listIncome.first;
   String dropdownValueRecurrence = listRecurrence.first;
   @override
   void initState() {
     super.initState();
-    _controllerAmount = TextEditingController();
-    _controllerNote = TextEditingController();
-    _controllerDate = TextEditingController();
+    _amountController = TextEditingController();
+    _noteController = TextEditingController();
+    _dateController = TextEditingController();
     _expenses = false;
   }
 
   @override
   void dispose() {
-    _controllerAmount.dispose();
-    _controllerNote.dispose();
-    _controllerDate.dispose();
+    _amountController.dispose();
+    _noteController.dispose();
+    _dateController.dispose();
     super.dispose();
   }
+   void submitExpense() {
+    print(
+          double.parse(_amountController.value.text) );
+          print(dropdownValueRecurrence);
+          print(_dateController.value.text);
+          //categories[_selectedCategoryIndex],
+          print(_noteController.value.text);
+    print(dropdownValueIncome);
 
+    setState(() {
+      _amountController.clear();
+      dropdownValueRecurrence=listRecurrence.first;
+      _dateController.clear();
+      _noteController.clear();
+      dropdownValueExpenses = listCategory.first;
+      dropdownValueIncome=listIncome.first;
+      
+    });
+  }
   @override
   Widget build(BuildContext context) {
     double defaultWidth = MediaQuery.of(context).size.width;
@@ -194,7 +212,7 @@ DateTime selectedDate= DateTime.now();
                           FilteringTextInputFormatter.allow(
                               RegExp(r'^(\d+)?\.?\d{0,2}'))
                         ],
-                        controller: _controllerAmount,
+                        controller: _amountController,
                         onSubmitted: (String value) async {
 
                         },
@@ -233,6 +251,7 @@ DateTime selectedDate= DateTime.now();
                             padding: const EdgeInsets.all(defaultSpacing / 30),
                             child: DropdownButtonFormField<String>(
                               value: dropdownValueRecurrence,
+                                
                               decoration: const InputDecoration(
                                   filled: true,
                                   fillColor: Colors.white,
@@ -321,7 +340,7 @@ DateTime selectedDate= DateTime.now();
                                         color: Colors.white, width: 1.0)),
                                 border: InputBorder.none,
                               ),
-                              controller: _controllerDate,
+                              controller: _dateController,
                               onSubmitted: (String value) async {},
                                                  ),
                            ),
@@ -359,7 +378,7 @@ DateTime selectedDate= DateTime.now();
                                   color: Colors.white, width: 1.0)),
                           border: InputBorder.none,
                         ),
-                        controller: _controllerNote,
+                        controller: _noteController,
                         onSubmitted: (String value) async {},
                       ),
                     ),
@@ -498,7 +517,7 @@ DateTime selectedDate= DateTime.now();
                               backgroundColor: Colors.transparent,
                               shadowColor: Colors.transparent),
                           onPressed: () {
-                            print("on tapped buton");
+                            submitExpense();
                           },
                           child: const Text('Add'),
                         ),
