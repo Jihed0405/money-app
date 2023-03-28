@@ -4,16 +4,32 @@ import 'package:flutter/services.dart';
 import '../utils/constants.dart';
 import '../widget/custom_toggle.dart';
 
-const List<String> list = <String>['CatOne', 'Two', 'Three', 'Four'];
-const List<String> list2 = <String>[
-  'ReccurrenceDaily',
+const List<String> listCategory = <String>[
+  'Fashion',
+  'Grocery',
+  'Transport',
+  'Entertainment',
+  'Travel',
+  'Home Rent',
+  'Pet',
+  'Extra'
+];
+List<String> list = listCategory;
+const List<String> listIncome = <String>[
+  'Payments',
+  'Salary',
+  'Commission',
+  'Interest',
+  "Selling something you create or own",
+  "Investments",
+  "Gifts",
+  "Government Payments"
+];
+const List<String> listRecurrence = <String>[
+  'Daily',
   'weekly',
   'monthly',
   'yearly'
-];
-const List<Widget> typeOfADD = <Widget>[
-  Text('Income'),
-  Text('Expenses'),
 ];
 
 class AddWidget extends StatefulWidget {
@@ -25,22 +41,25 @@ class AddWidget extends StatefulWidget {
 
 class _AddWidgetState extends State<AddWidget> {
   List<bool> isSelected = <bool>[true, false];
-  bool vertical = false;
-  late TextEditingController _controller;
-  late TextEditingController _controller2;
-  String dropdownValue = list.first;
-  String dropdownValue2 = list2.first;
+  bool _expenses = false;
+
+  late TextEditingController _controllerAmount;
+  late TextEditingController _controllerNote;
+  String dropdownValueExpenses = listCategory.first;
+  String dropdownValueIncome = listIncome.first;
+  String dropdownValueRecurrence = listRecurrence.first;
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController();
-    _controller2 = TextEditingController();
+    _controllerAmount = TextEditingController();
+    _controllerNote = TextEditingController();
+    _expenses = false;
   }
 
   @override
   void dispose() {
-    _controller.dispose();
-    _controller2.dispose();
+    _controllerAmount.dispose();
+    _controllerNote.dispose();
     super.dispose();
   }
 
@@ -48,8 +67,6 @@ class _AddWidgetState extends State<AddWidget> {
   Widget build(BuildContext context) {
     double defaultWidth = MediaQuery.of(context).size.width;
     double defaultHeight = MediaQuery.of(context).size.height;
-    final ButtonStyle style =
-        ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
     return SingleChildScrollView(
       child: SafeArea(
         child: Column(
@@ -82,6 +99,11 @@ class _AddWidgetState extends State<AddWidget> {
                           buttonIndex < isSelected.length;
                           buttonIndex++) {
                         isSelected[buttonIndex] = buttonIndex == index;
+                        if (index == 1) {
+                          _expenses = true;
+                        } else {
+                          _expenses = false;
+                        }
                       }
                     });
                   },
@@ -117,7 +139,6 @@ class _AddWidgetState extends State<AddWidget> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("some filds"),
                     Container(
                       decoration: BoxDecoration(
                           color: Colors.white,
@@ -156,7 +177,7 @@ class _AddWidgetState extends State<AddWidget> {
                           FilteringTextInputFormatter.allow(
                               RegExp(r'^(\d+)?\.?\d{0,2}'))
                         ],
-                        controller: _controller,
+                        controller: _controllerAmount,
                         onSubmitted: (String value) async {},
                       ),
                     ),
@@ -173,6 +194,7 @@ class _AddWidgetState extends State<AddWidget> {
                                 color: Colors.grey.withOpacity(0.2))
                           ]),
                       child: TextField(
+                        enableSuggestions: false,
                         decoration: InputDecoration(
                           hintText: 'Note',
                           prefixIcon: Icon(
@@ -182,72 +204,26 @@ class _AddWidgetState extends State<AddWidget> {
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30),
                               borderSide: const BorderSide(
-                                  color: Colors.white, width: 1.0)),
+                                  color: Colors.white, width: 0.0
+                                  )),
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30),
                               borderSide: const BorderSide(
                                   color: Colors.white, width: 1.0)),
                           border: InputBorder.none,
                         ),
-                        keyboardType:
-                            defaultTargetPlatform == TargetPlatform.iOS
-                                ? const TextInputType.numberWithOptions(
-                                    decimal: true, signed: true)
-                                : const TextInputType.numberWithOptions(
-                                    decimal: true),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp(r'^(\d+)?\.?\d{0,2}'))
-                        ],
-                        controller: _controller,
-                        onSubmitted: (String value) async {},
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(30),
-                          boxShadow: [
-                            BoxShadow(
-                                blurRadius: 10,
-                                spreadRadius: 7,
-                                offset: const Offset(1, 1),
-                                color: Colors.grey.withOpacity(0.2))
-                          ]),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: const BorderSide(
-                                  color: Colors.white, width: 1.0)),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: const BorderSide(
-                                  color: Colors.white, width: 1.0)),
-                          border: InputBorder.none,
-                          hintText: 'Amount',
-                        ),
-                        keyboardType:
-                            defaultTargetPlatform == TargetPlatform.iOS
-                                ? const TextInputType.numberWithOptions(
-                                    decimal: true, signed: true)
-                                : const TextInputType.numberWithOptions(
-                                    decimal: true),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp(r'^(\d+)?\.?\d{0,2}'))
-                        ],
-                        controller: _controller,
+                        controller: _controllerNote,
                         onSubmitted: (String value) async {},
                       ),
                     ),
                     const SizedBox(height: 20),
                     Container(
                       width: defaultWidth,
+                      height: defaultHeight / 10,
                       decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: const BorderRadius.all(
+                              Radius.circular(defaultRadius)),
                           boxShadow: [
                             BoxShadow(
                                 blurRadius: 10,
@@ -255,34 +231,166 @@ class _AddWidgetState extends State<AddWidget> {
                                 offset: const Offset(1, 1),
                                 color: Colors.grey.withOpacity(0.2))
                           ]),
-                      child: Padding(
-                        padding: const EdgeInsets.all(defaultSpacing / 2),
-                        child: DropdownButtonFormField<String>(
-                          value: dropdownValue,
-                          decoration: const InputDecoration(
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.white, width: 1.0)),
-                              enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.white, width: 1.0))),
-                          borderRadius: BorderRadius.circular(30),
-                          elevation: 16,
-                          style: const TextStyle(color: Colors.black),
-                          onChanged: (String? value) {
-                            // This is called when the user selects an item.
-                            setState(() {
-                              dropdownValue = value!;
-                            });
-                          },
-                          items: list
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: defaultSpacing, top: defaultSpacing / 2),
+                            child: Text("Reccurrence",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .copyWith(color: fontSubHeading)),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(defaultSpacing / 30),
+                            child: DropdownButtonFormField<String>(
+                              value: dropdownValueRecurrence,
+                              decoration: const InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  labelStyle: TextStyle(
+                                    color: fontSubHeading,
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.white, width: 1.0)),
+                                  enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.white, width: 1.0))),
+                              borderRadius: const BorderRadius.all(
+                                  Radius.circular(defaultRadius)),
+                              elevation: 16,
+                              style: const TextStyle(color: Colors.black),
+                              onChanged: (String? recurrenceValue) {
+                                // This is called when the user selects an item.
+                                setState(() {
+                                  dropdownValueRecurrence = recurrenceValue!;
+                                });
+                              },
+                              items: listRecurrence
+                                  .map<DropdownMenuItem<String>>(
+                                      (String recurrenceValue) {
+                                if (recurrenceValue ==
+                                    dropdownValueRecurrence) {
+                                  return DropdownMenuItem<String>(
+                                    value: recurrenceValue,
+                                    child: Text(recurrenceValue,
+                                        style: const TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold)),
+                                  );
+                                } else {
+                                  return DropdownMenuItem<String>(
+                                    value: recurrenceValue,
+                                    child: Text(recurrenceValue),
+                                  );
+                                }
+                              }).toList(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      width: defaultWidth,
+                      height: defaultHeight / 10,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: const BorderRadius.all(
+                              Radius.circular(defaultRadius)),
+                          boxShadow: [
+                            BoxShadow(
+                                blurRadius: 10,
+                                spreadRadius: 7,
+                                offset: const Offset(1, 1),
+                                color: Colors.grey.withOpacity(0.2))
+                          ]),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: defaultSpacing, top: defaultSpacing / 2),
+                            child: Text("Category",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .copyWith(color: fontSubHeading)),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(defaultSpacing / 30),
+                            child: DropdownButtonFormField<String>(
+                                value: _expenses
+                                    ? dropdownValueExpenses
+                                    : dropdownValueIncome,
+                                decoration: const InputDecoration(
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    labelStyle: TextStyle(
+                                      color: fontSubHeading,
+                                    ),
+                                    focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.white, width: 1.0)),
+                                    enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.white, width: 1.0))),
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(defaultRadius)),
+                                elevation: 16,
+                                style: const TextStyle(color: Colors.black),
+                                onChanged: (String? value) {
+                                  // This is called when the user selects an item.
+                                  setState(() {
+                                    if (_expenses) {
+                                      dropdownValueExpenses = value!;
+                                    } else {
+                                      dropdownValueIncome = value!;
+                                    }
+                                  });
+                                },
+                                items: _expenses
+                                    ? listCategory.map((String value) {
+                                        if (value == dropdownValueExpenses) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value,
+                                                style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                          );
+                                        } else {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        }
+                                      }).toList()
+                                    : listIncome.map((String value) {
+                                        if (value == dropdownValueIncome) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value,
+                                                style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                          );
+                                        } else {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        }
+                                      }).toList()),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -327,77 +435,6 @@ class _AddWidgetState extends State<AddWidget> {
                     ),
                   ],
                 )),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(defaultSpacing),
-                  child: DropdownButton<String>(
-                    value: dropdownValue,
-                    icon: const Icon(Icons.arrow_downward),
-                    elevation: 16,
-                    style: const TextStyle(color: Colors.deepPurple),
-                    underline: Container(
-                      height: 2,
-                      color: Colors.deepPurpleAccent,
-                    ),
-                    onChanged: (String? value) {
-                      // This is called when the user selects an item.
-                      setState(() {
-                        dropdownValue = value!;
-                      });
-                    },
-                    items: list.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: DropdownButton<String>(
-                    value: dropdownValue2,
-                    icon: const Icon(Icons.arrow_downward),
-                    elevation: 16,
-                    style: const TextStyle(color: Colors.deepPurple),
-                    underline: Container(
-                      height: 2,
-                      color: Colors.deepPurpleAccent,
-                    ),
-                    onChanged: (String? value2) {
-                      // This is called when the user selects an item.
-                      setState(() {
-                        dropdownValue2 = value2!;
-                      });
-                    },
-                    items: list2.map<DropdownMenuItem<String>>((String value2) {
-                      return DropdownMenuItem<String>(
-                        value: value2,
-                        child: Text(value2),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Note',
-                    ),
-                    controller: _controller2,
-                    onSubmitted: (String value) async {},
-                  ),
-                ),
-              ],
-            ),
           ],
         ),
       ),
