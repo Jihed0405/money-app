@@ -37,9 +37,13 @@ const List<String> listRecurrence = <String>[
   'yearly'
 ];
 
-class AddWidget extends ConsumerWidget {
+class AddWidget extends StatefulWidget {
   AddWidget({Key? key}) : super(key: key);
+  @override
+  State<AddWidget> createState() => _AddWidgetState();
+}
 
+class _AddWidgetState extends State<AddWidget> {
   List<bool> isSelected = <bool>[true, false];
   bool _expenses = false;
   DateTime _selectedDate = DateTime.now();
@@ -56,27 +60,45 @@ class AddWidget extends ConsumerWidget {
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
     if (picked != null && picked != _selectedDate) {
-      _selectedDate = picked;
-      _dateController.text = "${_selectedDate.toLocal()}".split(' ')[0];
+      setState(() {
+        _selectedDate = picked;
+        _dateController.text = "${_selectedDate.toLocal()}".split(' ')[0];
+      });
     }
   }
 
-  late TextEditingController _amountController = TextEditingController();
-  late TextEditingController _noteController = TextEditingController();
-  late TextEditingController _dateController = TextEditingController();
+  late TextEditingController _amountController;
+  late TextEditingController _noteController;
+  late TextEditingController _dateController;
   String dropdownValueExpenses = listCategory.first;
   String dropdownValueIncome = listIncome.first;
   String dropdownValueRecurrence = listRecurrence.first;
+  @override
+  void initState() {
+    super.initState();
+    _amountController = TextEditingController();
+    _noteController = TextEditingController();
+    _dateController = TextEditingController();
+    _expenses = false;
+  }
 
   @override
   void dispose() {
     _amountController.dispose();
     _noteController.dispose();
     _dateController.dispose();
+    super.dispose();
   }
 
-  void submitExpense() {
-    /* switch (dropdownValueExpenses) {
+  void submitExpense(DataStateNotifier dataStateNotifier) {
+    dataStateNotifier.addTransaction(Transaction(
+        ItemCategoryType.fashion,
+        TransactionType.outflow,
+        "jihed",
+        "Pants 1 pcs test add state  ",
+        " 405.79",
+        "Aug, 09"));
+    /*  switch (dropdownValueExpenses) {
       case 'Fashion':
         _itemCategory = ItemCategoryType.fashion;
         break;
@@ -93,28 +115,23 @@ class AddWidget extends ConsumerWidget {
         "ben othen bag",
         _amountController.value.text,
         _dateController.value.text);
-   
-    
-  
+    */
 
-  
-    
-       _amountController.clear();
+    setState(() {
+      _amountController.clear();
       dropdownValueRecurrence = listRecurrence.first;
       _dateController.clear();
       _noteController.clear();
       dropdownValueExpenses = listCategory.first;
       dropdownValueIncome = listIncome.first;
-  
-     */
+    });
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     double defaultWidth = MediaQuery.of(context).size.width;
     double defaultHeight = MediaQuery.of(context).size.height;
-    final DataStateNotifier dataStateNotifier =
-        ref.watch(transactionProvider.notifier);
+
     return SingleChildScrollView(
       child: SafeArea(
         child: Column(
@@ -142,16 +159,18 @@ class AddWidget extends ConsumerWidget {
               Center(
                 child: ToggleButtons(
                   onPressed: (int index) {
-                    for (int buttonIndex = 0;
-                        buttonIndex < isSelected.length;
-                        buttonIndex++) {
-                      isSelected[buttonIndex] = buttonIndex == index;
-                      if (index == 1) {
-                        _expenses = true;
-                      } else {
-                        _expenses = false;
+                    setState(() {
+                      for (int buttonIndex = 0;
+                          buttonIndex < isSelected.length;
+                          buttonIndex++) {
+                        isSelected[buttonIndex] = buttonIndex == index;
+                        if (index == 1) {
+                          _expenses = true;
+                        } else {
+                          _expenses = false;
+                        }
                       }
-                    }
+                    });
                   },
                   isSelected: isSelected,
                   selectedColor: Colors.white,
@@ -277,8 +296,9 @@ class AddWidget extends ConsumerWidget {
                               style: const TextStyle(color: Colors.black),
                               onChanged: (String? recurrenceValue) {
                                 // This is called when the user selects an item.
-
-                                dropdownValueRecurrence = recurrenceValue!;
+                                setState(() {
+                                  dropdownValueRecurrence = recurrenceValue!;
+                                });
                               },
                               items: listRecurrence
                                   .map<DropdownMenuItem<String>>(
@@ -434,12 +454,13 @@ class AddWidget extends ConsumerWidget {
                                 style: const TextStyle(color: Colors.black),
                                 onChanged: (String? value) {
                                   // This is called when the user selects an item.
-
-                                  if (_expenses) {
-                                    dropdownValueExpenses = value!;
-                                  } else {
-                                    dropdownValueIncome = value!;
-                                  }
+                                  setState(() {
+                                    if (_expenses) {
+                                      dropdownValueExpenses = value!;
+                                    } else {
+                                      dropdownValueIncome = value!;
+                                    }
+                                  });
                                 },
                                 items: _expenses
                                     ? listCategory.map((String value) {
@@ -485,46 +506,45 @@ class AddWidget extends ConsumerWidget {
                       width: defaultWidth,
                       height: 50,
                       child: Container(
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              stops: [
-                                0.1,
-                                0.15,
-                                0.4,
-                                0.8,
-                              ],
-                              colors: [
-                                Color(0xFF35a6e5),
-                                Color(0xFF42a0e8),
-                                Color(0xFFd676db),
-                                Color(0xFFf88568)
-                              ]),
-                          border: Border.all(
-                            //color: const Color.fromARGB(255, 18, 32, 47),
-                            color: Colors.transparent,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                stops: [
+                                  0.1,
+                                  0.15,
+                                  0.4,
+                                  0.8,
+                                ],
+                                colors: [
+                                  Color(0xFF35a6e5),
+                                  Color(0xFF42a0e8),
+                                  Color(0xFFd676db),
+                                  Color(0xFFf88568)
+                                ]),
+                            border: Border.all(
+                              //color: const Color.fromARGB(255, 18, 32, 47),
+                              color: Colors.transparent,
+                            ),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(defaultRadius),
+                            ),
                           ),
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(defaultRadius),
-                          ),
-                        ),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent),
-                          onPressed: () {
-                            dataStateNotifier.addTransaction(Transaction(
-                                ItemCategoryType.fashion,
-                                TransactionType.outflow,
-                                "jihed",
-                                "Pants 1 pcs test add state  ",
-                                " 405.79",
-                                "Aug, 09"));
-                          },
-                          child: const Text('Add'),
-                        ),
-                      ),
+                          child: Consumer(
+                            builder: (context, ref, child) {
+                              final DataStateNotifier dataStateNotifier =
+                                  ref.watch(transactionProvider.notifier);
+                              return ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.transparent,
+                                    shadowColor: Colors.transparent),
+                                onPressed: () {
+                                  submitExpense(dataStateNotifier);
+                                },
+                                child: const Text('Add'),
+                              );
+                            },
+                          )),
                     ),
                   ],
                 )),

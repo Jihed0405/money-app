@@ -6,7 +6,7 @@ import 'package:state_notifier/state_notifier.dart';
 // Book State Notifier
 class DataStateNotifier extends StateNotifier<List<Transaction>> {
   // Zero argument constructor for the super class
-  DataStateNotifier() : super([]);
+  DataStateNotifier() : super(transaction1);
 
   // Add a Book to the state
   void addTransaction(Transaction transactionToAdd) => state = [...state, transactionToAdd];

@@ -14,6 +14,7 @@ class Home extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final List<Transaction> transactionList = ref.watch(transactionProvider);
+     
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(defaultSpacing),
