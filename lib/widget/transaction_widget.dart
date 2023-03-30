@@ -36,10 +36,10 @@ class TransactionWidget extends StatelessWidget {
               decoration: BoxDecoration(
                   color: transaction.itemCategoryName == "Shoes"
                       ? const Color(0xFFffd89d)
-                      : transaction.categoryType == ItemCategoryType.payments
+                      : transaction.transactionType == TransactionType.inflow
                           ? const Color(0xFFeae9e9)
                           : transaction.categoryType ==
-                                  ItemCategoryType.transport
+                                 "Transport"
                               ? const Color(0xFFbdfff7)
                               : transaction.itemCategoryName == "Pants"
                                   ? const Color(0xFFfff7ac)
@@ -47,25 +47,28 @@ class TransactionWidget extends StatelessWidget {
                                       ? const Color(0xFFffdcdc)
                                       : transaction.itemCategoryName == "Bag"
                                           ? const Color(0xFFfc9191)
+                                       : transaction.categoryType == "Fashion"
+                                  ? const Color(0xFFffdcdc)
+                                  
                                           : transaction.itemCategoryName ==
                                                   "Food"
                                               ? const Color(0xFFfee45a)
+                                                : transaction.categoryType ==
+                                                  "Grocery"
+                                              ? const Color(0xFFfee45a)
                                               : transaction.categoryType ==
-                                                      ItemCategoryType
-                                                          .entertainment
+                                                  
+                                                          "Entertainment"
                                                   ? const Color(0xFFe63d3d)
                                                   : transaction.categoryType ==
-                                                          ItemCategoryType
-                                                              .travel
+                                                          "Travel"
                                                       ? const Color(0xFF14c9ac)
                                                       : transaction.categoryType ==
-                                                              ItemCategoryType
-                                                                  .homeRent
+                                                              "Home Rent"
                                                           ? const Color(0xFFffc95a)
                                                           : transaction
                                                                       .categoryType ==
-                                                                  ItemCategoryType
-                                                                      .pet
+                                                                  "Pet"
                                                               ? const Color(
                                                                   0xFF2389e9)
                                                               : const Color(
@@ -75,10 +78,10 @@ class TransactionWidget extends StatelessWidget {
                   ? const Image(image: AssetImage("assets/icons/sneakers.png"))
                   : transaction.itemCategoryName == "Bag"
                       ? const Image(image: AssetImage("assets/icons/bag.png"))
-                      : transaction.categoryType == ItemCategoryType.payments
+                      : transaction.transactionType == TransactionType.inflow
                           ? const Image(image: AssetImage("assets/icons/money.png"))
                           : transaction.categoryType ==
-                                  ItemCategoryType.transport
+                                  "Transport"
                               ? const Image(image: AssetImage("assets/icons/car.png"))
                               : transaction.itemCategoryName == "Tshirt"
                                   ? const Image(
@@ -88,30 +91,39 @@ class TransactionWidget extends StatelessWidget {
                                       ? const Image(
                                           image: AssetImage(
                                               "assets/icons/trousers.png"))
+                                                : transaction.categoryType == "Fashion"
+                                      ? const Image(
+                                          image: AssetImage(
+                                              "assets/icons/dress.png"))
                                       : transaction.itemCategoryName == "Food"
                                           ? const Image(
                                               image: AssetImage(
                                                   "assets/icons/hamburger.png"))
+                                                  
+                                      : transaction.categoryType == "Grocery"
+                                          ? const Image(
+                                              image: AssetImage(
+                                                  "assets/icons/shopping-bag.png"))
                                           : transaction.categoryType ==
-                                                  ItemCategoryType.entertainment
+                                                  "Entertainment"
                                               ? const Image(
                                                   image: AssetImage(
                                                       "assets/icons/joystick.png"))
                                               : transaction.categoryType ==
-                                                      ItemCategoryType.travel
+                                                      "Travel"
                                                   ? const Image(
                                                       image: AssetImage(
                                                           "assets/icons/plane.png"))
                                                   : transaction.categoryType ==
-                                                          ItemCategoryType
-                                                              .homeRent
+                                                          
+                                                              "Home Rent"
                                                       ? const Image(
                                                           image: AssetImage(
                                                               "assets/icons/home.png"))
                                                       : transaction
                                                                   .categoryType ==
-                                                              ItemCategoryType
-                                                                  .pet
+                                                             
+                                                                  "Pet"
                                                           ? const Image(
                                                               image: AssetImage(
                                                                   "assets/icons/pawprint.png"))

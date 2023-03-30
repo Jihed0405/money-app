@@ -48,7 +48,7 @@ class _AddWidgetState extends State<AddWidget> {
   bool _expenses = false;
   DateTime _selectedDate = DateTime.now();
 
-  late ItemCategoryType _itemCategory;
+  late String _itemCategory;
 
   late TransactionType _transactionType;
 
@@ -69,6 +69,7 @@ class _AddWidgetState extends State<AddWidget> {
 
   late TextEditingController _amountController;
   late TextEditingController _noteController;
+   late TextEditingController _nameController; 
   late TextEditingController _dateController;
   String dropdownValueExpenses = listCategory.first;
   String dropdownValueIncome = listIncome.first;
@@ -78,6 +79,7 @@ class _AddWidgetState extends State<AddWidget> {
     super.initState();
     _amountController = TextEditingController();
     _noteController = TextEditingController();
+     _nameController = TextEditingController();
     _dateController = TextEditingController();
     _expenses = false;
   }
@@ -86,42 +88,42 @@ class _AddWidgetState extends State<AddWidget> {
   void dispose() {
     _amountController.dispose();
     _noteController.dispose();
+     _nameController.dispose();
     _dateController.dispose();
     super.dispose();
   }
 
   void submitExpense(DataStateNotifier dataStateNotifier) {
-    dataStateNotifier.addTransaction(Transaction(
-        ItemCategoryType.fashion,
-        TransactionType.outflow,
-        "jihed",
-        "Pants 1 pcs test add state  ",
-        " 405.79",
-        "Aug, 09"));
-    /*  switch (dropdownValueExpenses) {
-      case 'Fashion':
-        _itemCategory = ItemCategoryType.fashion;
-        break;
-    }
     switch (_expenses) {
       case true:
+        setState(() {
         _transactionType = TransactionType.outflow;
+        _itemCategory = dropdownValueExpenses;
+          
+        });
         break;
-    }
+        case false:
+        setState(() {
+        _transactionType = TransactionType.inflow;
+      _itemCategory = dropdownValueIncome;
+       
+        });
+       }
     transaction = Transaction(
         _itemCategory,
         _transactionType,
-        "jihed",
-        "ben othen bag",
+        _nameController.value.text,
+        _noteController.value.text,
         _amountController.value.text,
         _dateController.value.text);
-    */
 
+    dataStateNotifier.addTransaction(transaction);
     setState(() {
       _amountController.clear();
       dropdownValueRecurrence = listRecurrence.first;
       _dateController.clear();
       _noteController.clear();
+      _nameController.clear();
       dropdownValueExpenses = listCategory.first;
       dropdownValueIncome = listIncome.first;
     });
@@ -134,6 +136,7 @@ class _AddWidgetState extends State<AddWidget> {
 
     return SingleChildScrollView(
       child: SafeArea(
+        top: true,
         child: Column(
           children: [
             AppBar(
@@ -153,7 +156,7 @@ class _AddWidgetState extends State<AddWidget> {
               ),
             ),
             const SizedBox(
-              height: defaultSpacing * 4,
+              height: defaultSpacing,
             ),
             Column(children: [
               Center(
@@ -366,6 +369,45 @@ class _AddWidgetState extends State<AddWidget> {
                             ),
                           ),
                         ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(30),
+                          boxShadow: [
+                            BoxShadow(
+                                blurRadius: 10,
+                                spreadRadius: 7,
+                                offset: const Offset(1, 1),
+                                color: Colors.grey.withOpacity(0.2))
+                          ]),
+                      child: TextField(
+                        enableSuggestions: false,
+                        decoration: InputDecoration(
+                          hintText: 'Name',
+                          prefixIcon: _expenses
+                              ? Icon(
+                                  Icons.trending_down_rounded,
+                                  color: Colors.amber[200],
+                                )
+                              : Icon(
+                                  Icons.trending_up_rounded,
+                                  color: Colors.amber[200],
+                                ),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: const BorderSide(
+                                  color: Colors.white, width: 0.0)),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: const BorderSide(
+                                  color: Colors.white, width: 1.0)),
+                          border: InputBorder.none,
+                        ),
+                        controller: _nameController,
+                        onSubmitted: (String value) async {},
                       ),
                     ),
                     const SizedBox(height: 20),

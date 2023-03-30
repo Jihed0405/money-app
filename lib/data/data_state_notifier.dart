@@ -4,6 +4,9 @@ import 'package:state_notifier/state_notifier.dart';
 
 
 // Book State Notifier
+final visibleButtonProvider = StateProvider<bool>((ref) {
+  return true ;
+});
 class DataStateNotifier extends StateNotifier<List<Transaction>> {
   // Zero argument constructor for the super class
   DataStateNotifier() : super(transaction1);

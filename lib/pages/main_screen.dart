@@ -1,5 +1,6 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_money_app/data/data_state_notifier.dart';
 import 'package:flutter_money_app/pages/add.dart';
 import 'package:flutter_money_app/pages/home.dart';
 import 'package:flutter_money_app/pages/profile.dart';
@@ -23,42 +24,58 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   var _currentPageIndex = 0;
-
+var visible = false;
   @override
   Widget build(BuildContext context) {
     
       return Scaffold(
         body: getBody(),
-        floatingActionButton: FloatingActionButton(
-          child: Container(
-            width: 60,
-            height: 60,
-            decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
-                    begin: Alignment.bottomRight,
-                    end: Alignment.topLeft,
-                    stops: [
-                      0.1,
-                      0.15,
-                      0.4,
-                      0.8,
-                    ],
-                    colors: [
-                      Color(0xFF35a6e5),
-                      Color(0xFF42a0e8),
-                      Color(0xFFd676db),
-                      Color(0xFFf88568)
-                    ])),
-            child: const Icon(Icons.add),
+        floatingActionButton:Consumer(
+          builder: (context, ref, child) {
+            final ButtonProvider = ref.watch(visibleButtonProvider);
+            return Visibility(
+          visible: ButtonProvider,
+          child: FloatingActionButton(
+            child: Container(
+              width: 60,
+              height: 60,
+              decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                      begin: Alignment.bottomRight,
+                      end: Alignment.topLeft,
+                      stops: [
+                        0.1,
+                        0.15,
+                        0.4,
+                        0.8,
+                      ],
+                      colors: [
+                        Color(0xFF35a6e5),
+                        Color(0xFF42a0e8),
+                        Color(0xFFd676db),
+                        Color(0xFFf88568)
+                      ])),
+              child: const Icon(Icons.add),
+            ),
+            //backgroundColor: LinearGradient(colors: [Color(0xFFce68f8),Color(0xFF8086f2),Color(0xFFf18991),Color(0xFFf48d87)),
+            onPressed: () {
+              setTabs(4);
+              ref.read(visibleButtonProvider.notifier).state=false;
+            },
           ),
-          //backgroundColor: LinearGradient(colors: [Color(0xFFce68f8),Color(0xFF8086f2),Color(0xFFf18991),Color(0xFFf48d87)),
-          onPressed: () {
-            setTabs(4);
-          },
-        ),
+        );}),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: getFooter(),
+        bottomNavigationBar:Consumer(
+          builder: (context, ref, child) {
+            final ButtonProvider = ref.watch(visibleButtonProvider); 
+        return getFooter(ref);})
+      
+      
+      
+      
+      
+      
       );
     
   }
@@ -76,7 +93,7 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget getFooter() {
+  Widget getFooter(WidgetRef ref) {
     List<IconData> iconItems = [
       Icons.home,
       Icons.insert_chart_sharp,
@@ -95,7 +112,9 @@ class _MainScreenState extends State<MainScreen> {
         iconSize: 25,
         rightCornerRadius: 10,
         onTap: (index) {
+          ref.read(visibleButtonProvider.notifier).state=true;
           setTabs(index);
+
         });
   }
 
