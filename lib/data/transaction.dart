@@ -1,3 +1,4 @@
+  
 enum TransactionType{
   outflow,inflow
 }
@@ -21,7 +22,7 @@ class Transaction{
   );
 
 }
-  const List<Transaction> transaction1=[
+   const List<Transaction> transaction1=[
     Transaction(ItemCategoryType.fashion, TransactionType.outflow, "Shoes", "Sneakers Nike", " 40.00", "Oct, 23"),
     Transaction(ItemCategoryType.fashion, TransactionType.outflow, "Bag", "Gucci Flax", " 40.00", "Sep, 15")    ,
     Transaction(ItemCategoryType.payments, TransactionType.inflow, "Payments", "Transfer from audrew", "190.00", "Aug, 24"),

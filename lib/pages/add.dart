@@ -1,9 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_money_app/data/transaction.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../data/data_state_notifier.dart';
 import '../utils/constants.dart';
 import '../widget/custom_toggle.dart';
 import 'dart:async';
+
 const List<String> listCategory = <String>[
   'Fashion',
   'Grocery',
@@ -33,75 +37,84 @@ const List<String> listRecurrence = <String>[
   'yearly'
 ];
 
-class AddWidget extends StatefulWidget {
-  const AddWidget({super.key});
+class AddWidget extends ConsumerWidget {
+  AddWidget({Key? key}) : super(key: key);
 
-  @override
-  State<AddWidget> createState() => _AddWidgetState();
-}
-
-class _AddWidgetState extends State<AddWidget> {
   List<bool> isSelected = <bool>[true, false];
   bool _expenses = false;
-DateTime _selectedDate= DateTime.now();
- Future<void> _selectDate(BuildContext context) async {
+  DateTime _selectedDate = DateTime.now();
+
+  late ItemCategoryType _itemCategory;
+
+  late TransactionType _transactionType;
+
+  late Transaction transaction;
+  Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: _selectedDate,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
     if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-        _dateController.text="${_selectedDate.toLocal()}".split(' ')[0];
-      });
+      _selectedDate = picked;
+      _dateController.text = "${_selectedDate.toLocal()}".split(' ')[0];
     }
   }
-  late TextEditingController _amountController;
-  late TextEditingController _noteController;
-  late TextEditingController _dateController;
+
+  late TextEditingController _amountController = TextEditingController();
+  late TextEditingController _noteController = TextEditingController();
+  late TextEditingController _dateController = TextEditingController();
   String dropdownValueExpenses = listCategory.first;
   String dropdownValueIncome = listIncome.first;
   String dropdownValueRecurrence = listRecurrence.first;
-  @override
-  void initState() {
-    super.initState();
-    _amountController = TextEditingController();
-    _noteController = TextEditingController();
-    _dateController = TextEditingController();
-    _expenses = false;
-  }
 
   @override
   void dispose() {
     _amountController.dispose();
     _noteController.dispose();
     _dateController.dispose();
-    super.dispose();
   }
-   void submitExpense() {
-    print(
-          double.parse(_amountController.value.text) );
-          print(dropdownValueRecurrence);
-          print(_dateController.value.text);
-          //categories[_selectedCategoryIndex],
-          print(_noteController.value.text);
-    print(dropdownValueIncome);
 
-    setState(() {
-      _amountController.clear();
-      dropdownValueRecurrence=listRecurrence.first;
+  void submitExpense() {
+    /* switch (dropdownValueExpenses) {
+      case 'Fashion':
+        _itemCategory = ItemCategoryType.fashion;
+        break;
+    }
+    switch (_expenses) {
+      case true:
+        _transactionType = TransactionType.outflow;
+        break;
+    }
+    transaction = Transaction(
+        _itemCategory,
+        _transactionType,
+        "jihed",
+        "ben othen bag",
+        _amountController.value.text,
+        _dateController.value.text);
+   
+    
+  
+
+  
+    
+       _amountController.clear();
+      dropdownValueRecurrence = listRecurrence.first;
       _dateController.clear();
       _noteController.clear();
       dropdownValueExpenses = listCategory.first;
-      dropdownValueIncome=listIncome.first;
-      
-    });
+      dropdownValueIncome = listIncome.first;
+  
+     */
   }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     double defaultWidth = MediaQuery.of(context).size.width;
     double defaultHeight = MediaQuery.of(context).size.height;
+    final DataStateNotifier dataStateNotifier =
+        ref.watch(transactionProvider.notifier);
     return SingleChildScrollView(
       child: SafeArea(
         child: Column(
@@ -129,18 +142,16 @@ DateTime _selectedDate= DateTime.now();
               Center(
                 child: ToggleButtons(
                   onPressed: (int index) {
-                    setState(() {
-                      for (int buttonIndex = 0;
-                          buttonIndex < isSelected.length;
-                          buttonIndex++) {
-                        isSelected[buttonIndex] = buttonIndex == index;
-                        if (index == 1) {
-                          _expenses = true;
-                        } else {
-                          _expenses = false;
-                        }
+                    for (int buttonIndex = 0;
+                        buttonIndex < isSelected.length;
+                        buttonIndex++) {
+                      isSelected[buttonIndex] = buttonIndex == index;
+                      if (index == 1) {
+                        _expenses = true;
+                      } else {
+                        _expenses = false;
                       }
-                    });
+                    }
                   },
                   isSelected: isSelected,
                   selectedColor: Colors.white,
@@ -213,13 +224,11 @@ DateTime _selectedDate= DateTime.now();
                               RegExp(r'^(\d+)?\.?\d{0,2}'))
                         ],
                         controller: _amountController,
-                        onSubmitted: (String value) async {
-
-                        },
+                        onSubmitted: (String value) async {},
                       ),
                     ),
                     const SizedBox(height: 20),
-                       Container(
+                    Container(
                       width: defaultWidth,
                       height: defaultHeight / 10,
                       decoration: BoxDecoration(
@@ -234,7 +243,6 @@ DateTime _selectedDate= DateTime.now();
                                 color: Colors.grey.withOpacity(0.2))
                           ]),
                       child: Column(
-                        
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -251,7 +259,6 @@ DateTime _selectedDate= DateTime.now();
                             padding: const EdgeInsets.all(defaultSpacing / 30),
                             child: DropdownButtonFormField<String>(
                               value: dropdownValueRecurrence,
-                                
                               decoration: const InputDecoration(
                                   filled: true,
                                   fillColor: Colors.white,
@@ -259,7 +266,6 @@ DateTime _selectedDate= DateTime.now();
                                     color: fontSubHeading,
                                   ),
                                   focusedBorder: UnderlineInputBorder(
-                                    
                                       borderSide: BorderSide(
                                           color: Colors.white, width: 1.0)),
                                   enabledBorder: UnderlineInputBorder(
@@ -271,9 +277,8 @@ DateTime _selectedDate= DateTime.now();
                               style: const TextStyle(color: Colors.black),
                               onChanged: (String? recurrenceValue) {
                                 // This is called when the user selects an item.
-                                setState(() {
-                                  dropdownValueRecurrence = recurrenceValue!;
-                                });
+
+                                dropdownValueRecurrence = recurrenceValue!;
                               },
                               items: listRecurrence
                                   .map<DropdownMenuItem<String>>(
@@ -299,8 +304,8 @@ DateTime _selectedDate= DateTime.now();
                         ],
                       ),
                     ),
-                      const SizedBox(height: 20),
- Container(
+                    const SizedBox(height: 20),
+                    Container(
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(30),
@@ -311,29 +316,25 @@ DateTime _selectedDate= DateTime.now();
                                 offset: const Offset(1, 1),
                                 color: Colors.grey.withOpacity(0.2))
                           ]),
-                      child:Row(
-                         children: <Widget>[
-                          IconButton( icon:
-                         Icon(Icons.date_range_sharp,color: Colors.blue[300],),
-                          
-                            onPressed:()=>
-                            _selectDate(context),
-                            
+                      child: Row(
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(
+                              Icons.date_range_sharp,
+                              color: Colors.blue[300],
+                            ),
+                            onPressed: () => _selectDate(context),
                           ),
-                          
-                            
-                           Expanded(
-                             child: TextField(
+                          Expanded(
+                            child: TextField(
                               enableSuggestions: false,
                               decoration: InputDecoration(
                                 hintText: 'Date',
                                 enabled: false,
-                                         
                                 focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(30),
                                     borderSide: const BorderSide(
-                                        color: Colors.white, width: 0.0
-                                        )),
+                                        color: Colors.white, width: 0.0)),
                                 enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(30),
                                     borderSide: const BorderSide(
@@ -342,12 +343,12 @@ DateTime _selectedDate= DateTime.now();
                               ),
                               controller: _dateController,
                               onSubmitted: (String value) async {},
-                                                 ),
-                           ),
-                         ],
-                       ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                      const SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Container(
                       decoration: BoxDecoration(
                           color: Colors.white,
@@ -370,8 +371,7 @@ DateTime _selectedDate= DateTime.now();
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30),
                               borderSide: const BorderSide(
-                                  color: Colors.white, width: 0.0
-                                  )),
+                                  color: Colors.white, width: 0.0)),
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30),
                               borderSide: const BorderSide(
@@ -382,8 +382,6 @@ DateTime _selectedDate= DateTime.now();
                         onSubmitted: (String value) async {},
                       ),
                     ),
-                  
-                 
                     const SizedBox(height: 20),
                     Container(
                       width: defaultWidth,
@@ -436,13 +434,12 @@ DateTime _selectedDate= DateTime.now();
                                 style: const TextStyle(color: Colors.black),
                                 onChanged: (String? value) {
                                   // This is called when the user selects an item.
-                                  setState(() {
-                                    if (_expenses) {
-                                      dropdownValueExpenses = value!;
-                                    } else {
-                                      dropdownValueIncome = value!;
-                                    }
-                                  });
+
+                                  if (_expenses) {
+                                    dropdownValueExpenses = value!;
+                                  } else {
+                                    dropdownValueIncome = value!;
+                                  }
                                 },
                                 items: _expenses
                                     ? listCategory.map((String value) {
@@ -517,7 +514,13 @@ DateTime _selectedDate= DateTime.now();
                               backgroundColor: Colors.transparent,
                               shadowColor: Colors.transparent),
                           onPressed: () {
-                            submitExpense();
+                            dataStateNotifier.addTransaction(Transaction(
+                                ItemCategoryType.fashion,
+                                TransactionType.outflow,
+                                "jihed",
+                                "Pants 1 pcs test add state  ",
+                                " 405.79",
+                                "Aug, 09"));
                           },
                           child: const Text('Add'),
                         ),

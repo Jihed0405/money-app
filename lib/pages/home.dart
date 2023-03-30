@@ -1,26 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_money_app/data/expense.dart';
 import 'package:flutter_money_app/utils/constants.dart';
-
+import '../data/data_state_notifier.dart';
 import '../data/transaction.dart';
 import '../data/user_info.dart';
 import '../widget/income_widget.dart';
 import '../widget/transaction_widget.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
-
+class Home extends ConsumerWidget {
+  Home({Key? key}) : super(key: key);
+  var listeVisible;
   @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final List<Transaction> transactionList = ref.watch(transactionProvider);
     return SingleChildScrollView(
-     
       child: Padding(
-       
         padding: const EdgeInsets.all(defaultSpacing),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,9 +59,7 @@ class _HomeState extends State<Home> {
               height: defaultSpacing * 2,
             ),
             Row(
-              
-             
-              children:  [
+              children: [
                 Expanded(
                     child: IncomeWidget(
                   expenseData: ExpenseData("Income", "\$ ${userData.inflow}",
@@ -99,20 +92,20 @@ class _HomeState extends State<Home> {
               "Today",
               style: TextStyle(color: fontSubHeading),
             ),
-             const SizedBox(
+            const SizedBox(
               height: defaultSpacing,
             ),
-            ...userData.transactions.map((transaction) =>
-            TransactionWidget(transaction:transaction)),
-             const SizedBox(
+            ...transactionList.map(
+                (transaction) => TransactionWidget(transaction: transaction)),
+            const SizedBox(
               height: defaultSpacing,
             ),
-             const Text(
+            const Text(
               "Yesterday",
               style: TextStyle(color: fontSubHeading),
             ),
-            ...transaction2.map((transaction) =>
-            TransactionWidget(transaction:transaction)),
+            ...transaction2.map(
+                (transaction) => TransactionWidget(transaction: transaction)),
           ],
         ),
       ),

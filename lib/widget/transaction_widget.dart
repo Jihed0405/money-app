@@ -5,7 +5,7 @@ import '../data/transaction.dart';
 
 class TransactionWidget extends StatelessWidget {
   final Transaction transaction;
-  const TransactionWidget({super.key, required this.transaction});
+    const TransactionWidget({required this.transaction, Key? key}) : super(key: key);
  String getSign(TransactionType type){
       switch(type) {
         case TransactionType.inflow:

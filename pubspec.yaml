@@ -38,6 +38,8 @@ dependencies:
   animated_bottom_navigation_bar: ^1.2.0
   simple_animations: ^2.2.3
   supercharged: ^1.11.1
+  flutter_riverpod: ^2.3.2
+  
 
 dev_dependencies:
   flutter_launcher_icons: "^0.12.0"

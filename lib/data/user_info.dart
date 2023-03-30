@@ -24,5 +24,5 @@ const userData= UserInfo(
   totalBalance: "4,586.00",
   inflow: "2,400.00",
   outflow: "710.00",
-  transactions: transaction1
+  transactions: transaction2
 );

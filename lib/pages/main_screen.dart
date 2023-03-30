@@ -4,7 +4,15 @@ import 'package:flutter_money_app/pages/add.dart';
 import 'package:flutter_money_app/pages/home.dart';
 import 'package:flutter_money_app/pages/profile.dart';
 import 'package:flutter_money_app/pages/stats.dart';
+import 'package:flutter_money_app/pages/wallet.dart';
 import 'package:flutter_money_app/utils/constants.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+void main() {
+  runApp(
+    const ProviderScope(
+    child:MainScreen(),
+  ));
+}
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -18,50 +26,52 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: getBody(),
-      floatingActionButton: FloatingActionButton(
-        child: Container(
-          width: 60,
-          height: 60,
-          decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                  begin: Alignment.bottomRight,
-                  end: Alignment.topLeft,
-                  stops: [
-                    0.1,
-                    0.15,
-                    0.4,
-                    0.8,
-                  ],
-                  colors: [
-                    Color(0xFF35a6e5),
-                    Color(0xFF42a0e8),
-                    Color(0xFFd676db),
-                    Color(0xFFf88568)
-                  ])),
-          child: const Icon(Icons.add),
+    
+      return Scaffold(
+        body: getBody(),
+        floatingActionButton: FloatingActionButton(
+          child: Container(
+            width: 60,
+            height: 60,
+            decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                    begin: Alignment.bottomRight,
+                    end: Alignment.topLeft,
+                    stops: [
+                      0.1,
+                      0.15,
+                      0.4,
+                      0.8,
+                    ],
+                    colors: [
+                      Color(0xFF35a6e5),
+                      Color(0xFF42a0e8),
+                      Color(0xFFd676db),
+                      Color(0xFFf88568)
+                    ])),
+            child: const Icon(Icons.add),
+          ),
+          //backgroundColor: LinearGradient(colors: [Color(0xFFce68f8),Color(0xFF8086f2),Color(0xFFf18991),Color(0xFFf48d87)),
+          onPressed: () {
+            setTabs(4);
+          },
         ),
-        //backgroundColor: LinearGradient(colors: [Color(0xFFce68f8),Color(0xFF8086f2),Color(0xFFf18991),Color(0xFFf48d87)),
-        onPressed: () {
-          setTabs(4);
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: getFooter(),
-    );
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        bottomNavigationBar: getFooter(),
+      );
+    
   }
 
   Widget getBody() {
     return IndexedStack(
       index: _currentPageIndex,
       children: [
-        const Home(),
+        Home(),
         const Stats(),
-        Container(),
-        const Profile(),
-        const AddWidget(),
+        Wallet(),
+         const Profile(),
+         AddWidget(),
       ],
     );
   }
