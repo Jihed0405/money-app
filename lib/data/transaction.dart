@@ -105,6 +105,9 @@ List<Transaction> transaction1 = [
 
  List<Transaction> transaction2 = [
   Transaction("Payments", TransactionType.inflow, "Payments",
+      "Transfer from my company", 2200,     DateTime(
+          threeDaysAgo.year, threeDaysAgo.month, threeDaysAgo.day, 12, 00, 00)),
+  Transaction("Payments", TransactionType.inflow, "Payments",
       "Transfer from my company", 2200,     DateTime(lastYear.year, lastYear.month, lastYear.day, 21, 13, 22)),
   Transaction("Entertainment", TransactionType.outflow, "Barcelone's game",
       "Camp Nou game vs RealMadrid ", 35,     DateTime(lastYear.year, lastYear.month, lastYear.day, 21, 13, 22),),

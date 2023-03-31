@@ -17,7 +17,7 @@ class UserInfo{
               required this.outflow,
               required this.transactions});
 }
-const userData= UserInfo(
+ UserInfo userData= UserInfo(
   name:"Timberline",
   firstName:"Jacob",
   email:"Jacobtimber@gmail.com",

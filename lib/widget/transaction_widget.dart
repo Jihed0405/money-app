@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_money_app/extensions/date_extensions.dart';
 import 'package:flutter_money_app/utils/constants.dart';
 
 import '../data/transaction.dart';
@@ -151,7 +152,7 @@ class TransactionWidget extends StatelessWidget {
                               ? red
                               : primaryDark,
                       fontSize: fontSizeBody)),
-              Text(transaction.date,
+              Text(transaction.date.shortDate,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: fontSubHeading, fontSize: fontSizeBody)),
             ],
