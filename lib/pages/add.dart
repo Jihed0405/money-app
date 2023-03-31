@@ -62,7 +62,7 @@ class _AddWidgetState extends State<AddWidget> {
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
-        _dateController.text = "${_selectedDate.toLocal()}".split(' ')[0];
+        
       });
     }
   }
@@ -110,12 +110,12 @@ class _AddWidgetState extends State<AddWidget> {
         });
        }
     transaction = Transaction(
-        _itemCategory,
+      _itemCategory,
         _transactionType,
         _nameController.value.text,
         _noteController.value.text,
-        _amountController.value.text,
-        _dateController.value.text);
+        double.parse(_amountController.value.text),
+       _selectedDate);
 
     dataStateNotifier.addTransaction(transaction);
     setState(() {

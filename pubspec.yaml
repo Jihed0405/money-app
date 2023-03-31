@@ -39,6 +39,8 @@ dependencies:
   simple_animations: ^2.2.3
   supercharged: ^1.11.1
   flutter_riverpod: ^2.3.2
+  fl_chart: ^0.61.0
+  intl: ^0.18.0
   
 
 dev_dependencies:
