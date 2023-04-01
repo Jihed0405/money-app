@@ -1,5 +1,4 @@
 enum Period {
-  day,
   week,
   month,
   year,
@@ -7,8 +6,7 @@ enum Period {
 
 String getPeriodName(Period period) {
   switch (period) {
-    case Period.day:
-      return "Day";
+    
     case Period.week:
       return "Week";
     case Period.month:
@@ -20,8 +18,7 @@ String getPeriodName(Period period) {
 
 String getPeriodDisplayName(Period period) {
   switch (period) {
-    case Period.day:
-      return "Today";
+    
     case Period.week:
       return "This week";
     case Period.month:
@@ -31,4 +28,4 @@ String getPeriodDisplayName(Period period) {
   }
 }
 
-List<Period> periods = [Period.day, Period.week, Period.month, Period.year];
+List<Period> periods = [Period.week, Period.month, Period.year];

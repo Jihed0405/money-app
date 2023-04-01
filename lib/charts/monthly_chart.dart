@@ -63,7 +63,7 @@ class MonthlyChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 32),
-      height: 147,
+      height: 100,
       child: BarChart(
         BarChartData(
           borderData: FlBorderData(

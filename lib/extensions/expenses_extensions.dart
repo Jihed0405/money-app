@@ -11,9 +11,7 @@ extension ExpensesExtension on List<Transaction> {
     DateTime now = DateTime.now();
 
     switch (period) {
-      case Period.day:
-        startDate = endDate = now.subtract(Duration(days: periodIndex));
-        break;
+      
       case Period.week:
         int diffSinceMonday = now.weekday - 1;
         startDate =

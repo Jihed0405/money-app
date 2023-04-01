@@ -85,7 +85,7 @@ var visible = false;
       index: _currentPageIndex,
       children: [
         Home(),
-        const Stats(),
+        Stats(),
         Wallet(),
          const Profile(),
          AddWidget(),

@@ -39,24 +39,25 @@ const List<String> _listCategory = <String>[
   "Government Payments"
 ];
 
-class Stats extends StatefulWidget {
-  const Stats({super.key});
+class Stats extends ConsumerWidget {
+  Stats({Key? key}) : super(key: key);
 
-  @override
-  State<Stats> createState() => _StatsState();
-}
 
-class _StatsState extends State<Stats> {
-   final PageController _controller = PageController(initialPage: 0);
-   set _currentPage(int value) {
-    setStateValues(value);
-  }
-    DateTime _startDate = DateTime.now();
-  DateTime _endDate = DateTime.now();
-   int get _numberOfPages {
-    switch (periods[_selectedPeriodIndex]) {
-      case Period.day:
-        return 365; // not used
+    
+  
+  
+   
+  
+  
+  
+   
+ 
+  int _selectedCategoryIndex = 0;
+ getNumberOfPages(ref)
+{
+  var selectedPeriod = ref.watch(selectedPeriodIndex);
+   switch (periods[selectedPeriod]) {
+      
       case Period.week:
         return 53;
       case Period.month:
@@ -64,58 +65,41 @@ class _StatsState extends State<Stats> {
       case Period.year:
         return 1;
     }
-  }
-   int _periodIndex = 1;
-    double _spentInPeriod = 0;
-  double _avgPerDay = 0;
-  int get _selectedPeriodIndex => _periodIndex;
-  set _selectedPeriodIndex(int value) {
-    _periodIndex = value;
-    setStateValues(0);
-    _controller.jumpToPage(0);
-  }
-@override
-  void initState() {
-    super.initState();
-    setStateValues(0);
-  }
-   void setStateValues(int page) {
-    var filterResults = transaction2.filterByPeriod(periods[_selectedPeriodIndex], page);
+}    
 
-    var expenses = filterResults[0] as List<Transaction>;
-    var start = filterResults[1] as DateTime;
-    var end = filterResults[2] as DateTime;
-    var numOfDays = end.difference(start).inDays;
-List<Transaction> _expenses = [];
-    setState(() {
-      _expenses = transaction2;
-      _startDate = start;
-      _endDate = end;
-      _spentInPeriod = expenses.sum();
-      _avgPerDay = _spentInPeriod / numOfDays;
-    });
-  }
-  int _selectedIndex = 0;
-  int _selectedCategoryIndex = 0;
-  _onSelected(index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
-  _onSelectedCategory(index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    print(index);
-  }
-@override
-void dispose() {
-   _controller.dispose();
-  super.dispose();
-}
+
+
+   
+  
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
+   DateTime _startDate = DateTime.now();
+   ref.read(numberOfPages.notifier).state=getNumberOfPages(ref);
+  DateTime _endDate = DateTime.now();
+  var pages = ref.watch(numberOfPages);
+    void setStateValues(int page) {
+    
+var selectedPeriod = ref.watch(selectedPeriodIndex);
+   var  filterResults = ref.watch(transactionProvider).filterByPeriod(periods[selectedPeriod], page);
+
+   var  expense = filterResults[0] as List<Transaction>;
+     var start = filterResults[1] as DateTime;
+     var end = filterResults[2] as DateTime;
+     var numOfDays = end.difference(start).inDays;
+    
+ 
+    
+
+    ref.read(expenses.notifier).state=expense;
+     ref.read(startDate.notifier).state= start;
+         ref.read(endDate.notifier).state=end;
+      ref.read(spentInPeriod.notifier).state = ref.watch(expenses).sum();
+     ref.read(avgPerDay.notifier).state= ref.watch(spentInPeriod) / numOfDays;
+    
+  }
+     final List<Transaction> transactionList = ref.watch(transactionProvider);
+
     
     double defaultWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -152,9 +136,12 @@ void dispose() {
                   right: true,
                   bottom: true,
                   child: PageView.builder(
-                    controller: _controller,
-                    onPageChanged: (newPage)=>_currentPage = newPage,
-                    itemCount: _numberOfPages,
+                    controller: ref.watch(controllerPage),
+                    onPageChanged: (newPage){
+                      ref.read(currentPage.notifier).state=newPage;
+                       setStateValues(newPage);
+                    },
+                    itemCount: pages,
                     reverse: true,  
                     itemBuilder:(context,index){
                        return Container(
@@ -165,7 +152,7 @@ void dispose() {
                 children: [
                   Container(
                     height: 50,
-                    padding: EdgeInsets.only(bottom: 10),
+                    
                     margin: const EdgeInsets.symmetric(
                         horizontal: defaultSpacing),
                     width: 3 * defaultWidth / 5,
@@ -186,21 +173,25 @@ void dispose() {
                                 color: background),
                             child: Center(
                               child: Text(
-                                _listFilter[index],
+                                periods[index].name,
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyMedium
                                     ?.copyWith(
                                         fontWeight: FontWeight.w500,
-                                        color: _selectedIndex != null &&
-                                                _selectedIndex == index
+                                        color: selectedPeriodIndex != null &&
+                                                selectedPeriodIndex == index
                                             ? Colors.blue[300]
                                             : fontSubHeading,
                                         fontSize: fontSizeBody),
                               ),
                             ),
                           ),
-                          onTap: () => _onSelected(index),
+                          onTap: ()
+                          {ref.read(selectedPeriodIndex.notifier).state=index;
+                          ref.read(periodIndex.notifier).state = index;
+    setStateValues(0);
+    ref.watch(controllerPage).jumpToPage(0);}
                         ),
                       ),
                       scrollDirection: Axis.horizontal,
@@ -241,7 +232,7 @@ void dispose() {
                                   ),
                                 ),
                                 Text(
-                                  _spentInPeriod.removeDecimalZeroFormat(),
+                                  ref.watch(spentInPeriod).removeDecimalZeroFormat(),
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -267,7 +258,7 @@ void dispose() {
                                   ),
                                 ),
                                 Text(
-                                  _avgPerDay.removeDecimalZeroFormat(),
+                                  ref.watch(avgPerDay).removeDecimalZeroFormat(),
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -280,23 +271,23 @@ void dispose() {
                             ],
                           ),
                           (() {
-                    switch (_selectedPeriodIndex) {
+                    switch (ref.watch(selectedPeriodIndex)) {
+                      case 0:
+                        return WeeklyChart(expenses: transactionList.groupWeekly());
                       case 1:
-                        return WeeklyChart(expenses: transaction2.groupWeekly());
-                      case 2:
                         return MonthlyChart(
-                          expenses: transaction2,
+                          expenses: transactionList,
                           startDate: _startDate,
                           endDate: _endDate,
                         );
-                      case 3:
-                        return YearlyChart(expenses: transaction2);
+                      case 2:
+                        return YearlyChart(expenses: transactionList);
                       default:
                         return const Text("");
                     }
                   }()),
                   (() {
-                    if (transaction2.isEmpty) {
+                    if (transactionList.isEmpty) {
                       return const Text("No data for selected period!");
                     } else {
                       return 
@@ -348,15 +339,15 @@ void dispose() {
                                       ?.copyWith(
                                           fontWeight: FontWeight.w500,
                                           color:
-                                              _selectedCategoryIndex != null &&
-                                                      _selectedIndex == index
+                                              selectedCategoryIndex != null &&
+                                                      selectedCategoryIndex == index
                                                   ? Colors.blue[300]
                                                   : fontSubHeading,
                                           fontSize: fontSizeBody),
                                 ),
                               ),
                             ),
-                            onTap: () => _onSelectedCategory(index),
+                            onTap: () =>   ref.read(selectedCategoryIndex.notifier).state=index
                           ),
                         ),
                         scrollDirection: Axis.horizontal,

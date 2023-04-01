@@ -95,7 +95,7 @@ class YearlyChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 32),
-      height: 147,
+      height: 117,
       child: BarChart(
         BarChartData(
           borderData: FlBorderData(
