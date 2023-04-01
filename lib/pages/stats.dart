@@ -30,13 +30,7 @@ const List<String> _listCategory = <String>[
   'Pet',
   "Investments",
   'Extra',
-  'Payments',
-  "Selling something",
-  'Salary',
-  'Commission',
-  'Interest',
-  "Gifts",
-  "Government Payments"
+  
 ];
 
 class Stats extends ConsumerWidget {
@@ -53,10 +47,20 @@ class Stats extends ConsumerWidget {
    
  
   int _selectedCategoryIndex = 0;
- getNumberOfPages(ref)
+ 
+
+
+
+   
+  
+  @override
+  Widget build(BuildContext context,WidgetRef ref) {
+
+   
+getNumberOfPages()
 {
-  var selectedPeriod = ref.watch(selectedPeriodIndex);
-   switch (periods[selectedPeriod]) {
+
+   switch (periods[ref.watch(selectedPeriodIndex)]) {
       
       case Period.week:
         return 53;
@@ -67,21 +71,11 @@ class Stats extends ConsumerWidget {
     }
 }    
 
-
-
-
-   
-  
-  @override
-  Widget build(BuildContext context,WidgetRef ref) {
-   DateTime _startDate = DateTime.now();
-   ref.read(numberOfPages.notifier).state=getNumberOfPages(ref);
-  DateTime _endDate = DateTime.now();
-  var pages = ref.watch(numberOfPages);
+ 
     void setStateValues(int page) {
     
-var selectedPeriod = ref.watch(selectedPeriodIndex);
-   var  filterResults = ref.watch(transactionProvider).filterByPeriod(periods[selectedPeriod], page);
+
+   var  filterResults = ref.read(transactionProvider.notifier).state.filterByPeriod(periods[ref.watch(selectedPeriodIndex)], page);
 
    var  expense = filterResults[0] as List<Transaction>;
      var start = filterResults[1] as DateTime;
@@ -96,8 +90,9 @@ var selectedPeriod = ref.watch(selectedPeriodIndex);
          ref.read(endDate.notifier).state=end;
       ref.read(spentInPeriod.notifier).state = ref.watch(expenses).sum();
      ref.read(avgPerDay.notifier).state= ref.watch(spentInPeriod) / numOfDays;
-    
+   print(ref.watch(selectedPeriodIndex));
   }
+  
      final List<Transaction> transactionList = ref.watch(transactionProvider);
 
     
@@ -140,8 +135,9 @@ var selectedPeriod = ref.watch(selectedPeriodIndex);
                     onPageChanged: (newPage){
                       ref.read(currentPage.notifier).state=newPage;
                        setStateValues(newPage);
+                      
                     },
-                    itemCount: pages,
+                    itemCount: ref.watch(numberOfPages),
                     reverse: true,  
                     itemBuilder:(context,index){
                        return Container(
@@ -179,8 +175,8 @@ var selectedPeriod = ref.watch(selectedPeriodIndex);
                                     .bodyMedium
                                     ?.copyWith(
                                         fontWeight: FontWeight.w500,
-                                        color: selectedPeriodIndex != null &&
-                                                selectedPeriodIndex == index
+                                        color: ref.watch(selectedPeriodIndex) != null &&
+                                                ref.watch(selectedPeriodIndex) == index
                                             ? Colors.blue[300]
                                             : fontSubHeading,
                                         fontSize: fontSizeBody),
@@ -189,9 +185,9 @@ var selectedPeriod = ref.watch(selectedPeriodIndex);
                           ),
                           onTap: ()
                           {ref.read(selectedPeriodIndex.notifier).state=index;
-                          ref.read(periodIndex.notifier).state = index;
+                        
     setStateValues(0);
-    ref.watch(controllerPage).jumpToPage(0);}
+    ref.read(controllerPage.notifier).state.jumpToPage(0);}
                         ),
                       ),
                       scrollDirection: Axis.horizontal,
@@ -220,7 +216,7 @@ var selectedPeriod = ref.watch(selectedPeriodIndex);
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text( "${_startDate.shortDate} - ${_endDate.shortDate}",
+                                  Text( "${ref.watch(startDate).shortDate} - ${ref.watch(endDate).shortDate}",
                             style: const TextStyle(fontSize: 20),),
                             Container(
                               margin: const  EdgeInsets.only(top: 8) ,
@@ -273,15 +269,15 @@ var selectedPeriod = ref.watch(selectedPeriodIndex);
                           (() {
                     switch (ref.watch(selectedPeriodIndex)) {
                       case 0:
-                        return WeeklyChart(expenses: transactionList.groupWeekly());
+                        return WeeklyChart(expenses: ref.watch(expenses).groupWeekly());
                       case 1:
                         return MonthlyChart(
-                          expenses: transactionList,
-                          startDate: _startDate,
-                          endDate: _endDate,
+                          expenses: ref.watch(expenses),
+                          startDate: ref.watch(startDate),
+                          endDate: ref.watch(endDate),
                         );
                       case 2:
-                        return YearlyChart(expenses: transactionList);
+                        return YearlyChart(expenses: ref.watch(expenses));
                       default:
                         return const Text("");
                     }
@@ -319,7 +315,7 @@ var selectedPeriod = ref.watch(selectedPeriodIndex);
                                           width: defaultWidth * 0.9,
                                           decoration: BoxDecoration(color: Colors.transparent),
                                           child: ListView.builder(
-                        itemCount: 17,
+                        itemCount: 10,
                         itemBuilder: (context, index) => Container(
                           width: defaultWidth / 2.8,
                           height: 80,
@@ -339,15 +335,18 @@ var selectedPeriod = ref.watch(selectedPeriodIndex);
                                       ?.copyWith(
                                           fontWeight: FontWeight.w500,
                                           color:
-                                              selectedCategoryIndex != null &&
-                                                      selectedCategoryIndex == index
+                                              ref.watch(selectedCategoryIndex)  != null &&
+                                                      ref.watch(selectedCategoryIndex) == index
                                                   ? Colors.blue[300]
                                                   : fontSubHeading,
                                           fontSize: fontSizeBody),
                                 ),
                               ),
                             ),
-                            onTap: () =>   ref.read(selectedCategoryIndex.notifier).state=index
+                            onTap: ()   {ref.read(selectedCategoryIndex.notifier).state=index;
+                          var filteredCategory= ref.read(expenses.notifier).state.filterByCategory(ref.watch(selectedCategoryIndex));
+                             ref.read(expenses.notifier).state=filteredCategory[0] as List<Transaction>;
+                            }
                           ),
                         ),
                         scrollDirection: Axis.horizontal,
@@ -356,7 +355,7 @@ var selectedPeriod = ref.watch(selectedPeriodIndex);
                                       ],
                                     ),
                                     
-                                    ...userData.transactions.map((transaction) =>
+                                    ... ref.watch(expenses).map((transaction) =>
                                         TransactionWidget(transaction: transaction)),
                                     const SizedBox(
                                       height: defaultSpacing,

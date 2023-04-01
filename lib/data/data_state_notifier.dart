@@ -5,6 +5,8 @@ import 'package:flutter_money_app/data/transaction.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:state_notifier/state_notifier.dart';
 
+import '../types/period.dart';
+
 
 // Book State Notifier
 final visibleButtonProvider = StateProvider<bool>((ref) {
@@ -16,8 +18,17 @@ final selectedPeriodIndex = StateProvider<int>((ref) {
 final selectedCategoryIndex = StateProvider<int>((ref) {
   return 0 ;
 });
-final numberOfPages = StateProvider<int>((ref) {
-  return 1 ;
+ StateProvider<int> numberOfPages = StateProvider<int>((ref) {
+   switch (periods[ref.watch(selectedPeriodIndex)]) {
+      // not used
+      case Period.week:
+        return 53;
+      case Period.month:
+        return 12;
+      case Period.year:
+        return 1;
+    }
+   
 });
 final expenses = StateProvider<List<Transaction>>((ref) {
 return [];

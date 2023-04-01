@@ -22,6 +22,7 @@ enum ItemCategoryType {
 }
 
 class Transaction {
+  final int id;
   final String categoryType;
   final TransactionType transactionType;
   final String itemCategoryName;
@@ -29,6 +30,7 @@ class Transaction {
   final double amount;
   final DateTime date;
   const Transaction(
+    this.id,
     this.categoryType,
     this.transactionType,
     this.itemCategoryName,
@@ -57,18 +59,18 @@ class Transaction {
 }
 
 List<Transaction> transaction1 = [
-  Transaction("Fashion", TransactionType.outflow, "Shoes", "Sneakers Nike",
+  Transaction(1,"Fashion", TransactionType.outflow, "Shoes", "Sneakers Nike",
       40, DateTime(now.year, now.month, now.day, 13, 37, 24)),
-  Transaction("Fashion", TransactionType.outflow, "Bag", "Gucci Flax", 40,
+  Transaction(2,"Fashion", TransactionType.outflow, "Bag", "Gucci Flax", 40,
       DateTime(yesterday.year, yesterday.month, yesterday.day, 11, 32, 07)),
   Transaction(
-      "Payments",
+      3,"Payments",
       TransactionType.inflow,
       "Payments",
       "Transfer from audrew",
       190,
       DateTime(twoDaysAgo.year, twoDaysAgo.month, twoDaysAgo.day, 18, 52, 48)),
-  Transaction(
+  Transaction(4,
       "Grocery",
       TransactionType.outflow,
       "Food",
@@ -76,7 +78,7 @@ List<Transaction> transaction1 = [
       35,
       DateTime(
           threeDaysAgo.year, threeDaysAgo.month, threeDaysAgo.day, 12, 00, 00)),
-  Transaction(
+  Transaction(5,
     "Transport",
     TransactionType.outflow,
     "Transport",
@@ -85,7 +87,7 @@ List<Transaction> transaction1 = [
     DateTime(
         eightDaysAgo.year, eightDaysAgo.month, eightDaysAgo.day, 21, 13, 22),
   ),
-  Transaction(
+  Transaction(6,
     "Fashion",
     TransactionType.outflow,
     "Tshirt",
@@ -93,7 +95,7 @@ List<Transaction> transaction1 = [
     15,
     DateTime(lastYear.year, lastYear.month, lastYear.day, 21, 13, 22),
   ),
-  Transaction(
+  Transaction(7,
     "Fashion",
     TransactionType.outflow,
     "Pants",
@@ -104,19 +106,19 @@ List<Transaction> transaction1 = [
 ];
 
  List<Transaction> transaction2 = [
-  Transaction("Payments", TransactionType.inflow, "Payments",
+  Transaction(9,"Payments", TransactionType.inflow, "Payments",
       "Transfer from my company", 2200,     DateTime(
           threeDaysAgo.year, threeDaysAgo.month, threeDaysAgo.day, 12, 00, 00)),
-  Transaction("Payments", TransactionType.inflow, "Payments",
+  Transaction(10,"Payments", TransactionType.inflow, "Payments",
       "Transfer from my company", 2200,     DateTime(lastYear.year, lastYear.month, lastYear.day, 21, 13, 22)),
-  Transaction("Entertainment", TransactionType.outflow, "Barcelone's game",
+  Transaction(11,"Entertainment", TransactionType.outflow, "Barcelone's game",
       "Camp Nou game vs RealMadrid ", 35,     DateTime(lastYear.year, lastYear.month, lastYear.day, 21, 13, 22),),
-  Transaction("Travel", TransactionType.outflow, "thailand travel",
+  Transaction(12,"Travel", TransactionType.outflow, "thailand travel",
       "visit Kata Beach", 580,     DateTime(lastYear.year, lastYear.month, lastYear.day, 21, 13, 22),),
-  Transaction("Home Rent", TransactionType.outflow, "Home Rent", "monthly rent",
+  Transaction(13,"Home Rent", TransactionType.outflow, "Home Rent", "monthly rent",
       600,     DateTime(lastYear.year, lastYear.month, lastYear.day, 21, 13, 22),),
-  Transaction("Pet", TransactionType.outflow, "Pet food", "Pet food", 10.00,
+  Transaction(14,"Pet", TransactionType.outflow, "Pet food", "Pet food", 10.00,
          DateTime(lastYear.year, lastYear.month, lastYear.day, 21, 13, 22),),
-  Transaction("extra", TransactionType.outflow, "Café", "hanging out café",
+  Transaction(15,"extra", TransactionType.outflow, "Café", "hanging out café",
       4.00,     DateTime(lastYear.year, lastYear.month, lastYear.day, 21, 13, 22),),
 ];

@@ -96,7 +96,7 @@ class Home extends ConsumerWidget {
             const SizedBox(
               height: defaultSpacing,
             ),
-            ...transactionList.map(
+            ...ref.watch(transactionProvider).map(
                 (transaction) => TransactionWidget(transaction: transaction)),
             const SizedBox(
               height: defaultSpacing,

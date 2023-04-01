@@ -36,11 +36,21 @@ extension ExpensesExtension on List<Transaction> {
       if (element.date.isBetween(startDate, endDate)) {
         expenses.add(element);
       }
+
     });
 
     return [expenses, startDate, endDate];
   }
+ List filterByCategory(int categoryIndex) {
+    List<Transaction> expenses = [];
+    forEach((element) {
+      if (element.categoryType==getCategory(categoryIndex)) {
+        expenses.add(element);
+      }
+     });
+     return [expenses];
 
+ }
   double sum() {
     double sum = 0;
     forEach((element) {
@@ -89,4 +99,29 @@ extension ExpensesExtension on List<Transaction> {
 
     return grouped;
   }
+  String getCategory(int categoryIndex ){
+    switch(categoryIndex){
+      case 1 : 
+       return "Fashion";
+       case 2 :
+       return 'Grocery';
+       case 3 : 
+      return'Transport'       ;
+       case 4:
+      return'Entertainment' ;
+       case 5:
+        return'Travel'     ;
+       case 6:
+  return'Home Rent'     ;
+       case 7:
+  return'Pet'     ;
+       case 8:
+   return"Investments"      ;
+       case 9:
+     return 'Extra'  ;
+        default :return "";
+    }
+  }
 }
+
+  

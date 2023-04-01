@@ -109,7 +109,7 @@ class _AddWidgetState extends State<AddWidget> {
        
         });
        }
-    transaction = Transaction(
+    transaction = Transaction(20,
       _itemCategory,
         _transactionType,
         _nameController.value.text,
