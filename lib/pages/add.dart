@@ -142,21 +142,27 @@ class _AddWidgetState extends State<AddWidget> {
         top: true,
         child: Column(
           children: [
-            AppBar(
-              centerTitle: true,
-              title: Text(
-                " Add Expenses",
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge
-                    ?.copyWith(fontWeight: FontWeight.w700),
-              ),
-              elevation: 0,
-              backgroundColor: background,
-              leading: const Icon(
-                Icons.arrow_back_ios,
-                color: fontDark,
-              ),
+            Consumer(
+                 builder: (context, ref, child) {
+              return AppBar(
+                centerTitle: true,
+                title: Text(
+                  " Add Expenses",
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge
+                      ?.copyWith(fontWeight: FontWeight.w700),
+                ),
+                elevation: 0,
+                backgroundColor: background,
+                leading:IconButton( 
+                icon : const Icon(
+                  Icons.arrow_back_ios,
+                  color: fontDark,
+                ),onPressed: (){
+          ref.read(currentPageIndex.notifier).state= ref.watch(precedentPageIndex);
+        },)
+              );}
             ),
             const SizedBox(
               height: defaultSpacing,

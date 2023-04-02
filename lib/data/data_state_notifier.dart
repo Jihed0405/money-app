@@ -49,7 +49,9 @@ final amountController = StateProvider<TextEditingController>((ref) {
   
   
 
-
+final precedentPageIndex = StateProvider<int>((ref) {
+  return 0;
+});
 final currentPageIndex = StateProvider<int>((ref) {
   return 0;
 });

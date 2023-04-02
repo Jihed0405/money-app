@@ -1,3 +1,5 @@
+import 'dart:math';
+import 'dart:developer' as developer;
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_money_app/data/data_state_notifier.dart';
@@ -88,11 +90,12 @@ var visible = false;
   Widget getBody(ref) {
     return IndexedStack(
       index: ref.watch(currentPageIndex),
+      
       children: [
         Home(),
         Stats(),
         Wallet(),
-         const Profile(),
+          Profile(),
          AddWidget(),
          EditWidget(),
       ],
@@ -125,6 +128,8 @@ var visible = false;
   }
 
   setTabs(index,ref) {
+      ref.read(precedentPageIndex.notifier).state= ref.watch(currentPageIndex);
     ref.read(currentPageIndex.notifier).state=index;
+   
   }
 }

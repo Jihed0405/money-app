@@ -80,10 +80,14 @@ class Stats extends ConsumerWidget {
         ),
         elevation: 0,
         backgroundColor: background,
-        leading: const Icon(
+        leading: IconButton(
+          icon: const Icon(
           Icons.arrow_back_ios,
           color: fontDark,
         ),
+         onPressed: (){
+          ref.read(currentPageIndex.notifier).state= ref.watch(precedentPageIndex);
+        },),
       ),
       /*  */
 

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_money_app/data/data_state_notifier.dart';
 import 'package:flutter_money_app/utils/constants.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/user_info.dart';
 import '../widget/profile_account_info_tile.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({super.key});
 
-  @override
-  State<Profile> createState() => _ProfileState();
-}
 
-class _ProfileState extends State<Profile> {
+
+
+class Profile extends ConsumerWidget {
+    Profile({Key? key}) : super(key: key);
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     return Scaffold(
       
       backgroundColor: background,
@@ -21,10 +21,15 @@ class _ProfileState extends State<Profile> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: background,
-        leading: const Icon(
+        leading: IconButton(
+        icon:   const Icon(
           Icons.arrow_back_ios,
           color: fontDark,
+          
         ),
+        onPressed: (){
+          ref.read(currentPageIndex.notifier).state= ref.watch(precedentPageIndex);
+        },),
         actions: const [
           Image(image: AssetImage("assets/icons/settings.png"))
         ],
