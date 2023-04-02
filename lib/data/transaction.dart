@@ -24,12 +24,12 @@ enum ItemCategoryType {
 class Transaction {
   final int id;
   final String categoryType;
-  final TransactionType transactionType;
+   TransactionType transactionType;
   final String itemCategoryName;
   final String itemName;
   final double amount;
   final DateTime date;
-  const Transaction(
+   Transaction(
     this.id,
     this.categoryType,
     this.transactionType,

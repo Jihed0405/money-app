@@ -15,7 +15,9 @@ class Wallet extends ConsumerWidget{
   Widget build(BuildContext context, WidgetRef ref) {
      final List<Transaction> transactionList = ref.watch(transactionProvider); 
     return Column(
-      
+      children: [
+        Text("edit data")
+      ],
     );
   }
 

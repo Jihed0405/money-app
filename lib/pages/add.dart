@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_money_app/data/transaction.dart';
+import 'package:flutter_money_app/extensions/date_extensions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/data_state_notifier.dart';
 import '../utils/constants.dart';
@@ -46,6 +47,7 @@ class AddWidget extends StatefulWidget {
 class _AddWidgetState extends State<AddWidget> {
   List<bool> isSelected = <bool>[true, false];
   bool _expenses = false;
+   bool _canSubmit = false;
   DateTime _selectedDate = DateTime.now();
 
   late String _itemCategory;
@@ -62,12 +64,12 @@ class _AddWidgetState extends State<AddWidget> {
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
-        
+        _dateController.text=picked.formattedDate;
       });
     }
   }
 
-  late TextEditingController _amountController;
+   late TextEditingController _amountController;
   late TextEditingController _noteController;
    late TextEditingController _nameController; 
   late TextEditingController _dateController;
@@ -77,6 +79,7 @@ class _AddWidgetState extends State<AddWidget> {
   @override
   void initState() {
     super.initState();
+    
     _amountController = TextEditingController();
     _noteController = TextEditingController();
      _nameController = TextEditingController();
@@ -246,7 +249,10 @@ class _AddWidgetState extends State<AddWidget> {
                               RegExp(r'^(\d+)?\.?\d{0,2}'))
                         ],
                         controller: _amountController,
-                        onSubmitted: (String value) async {},
+                        onSubmitted: (String value) async {
+                           setState(() => _canSubmit =
+                                _dateController.text.isNotEmpty && value.isNotEmpty);
+                        },
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -350,7 +356,7 @@ class _AddWidgetState extends State<AddWidget> {
                           ),
                           Expanded(
                             child: TextField(
-                              enableSuggestions: false,
+                              
                               decoration: InputDecoration(
                                 hintText: 'Date',
                                 enabled: false,
@@ -365,7 +371,10 @@ class _AddWidgetState extends State<AddWidget> {
                                 border: InputBorder.none,
                               ),
                               controller: _dateController,
-                              onSubmitted: (String value) async {},
+                              onSubmitted: (String value) async {
+                                 setState(() => _canSubmit =
+                                value.isNotEmpty && _amountController.text.isNotEmpty);
+                              },
                             ),
                           ),
                         ],
@@ -581,9 +590,16 @@ class _AddWidgetState extends State<AddWidget> {
                                     backgroundColor: Colors.transparent,
                                     shadowColor: Colors.transparent),
                                 onPressed: () {
-                                  submitExpense(dataStateNotifier);
+                                 _canSubmit ? submitExpense(dataStateNotifier) : null;
                                 },
-                                child: const Text('Add'),
+                                child:  Text('Add',style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                          color:  _canSubmit
+                              ? const Color.fromARGB(255, 255, 255, 255)
+                              : const Color.fromARGB(100, 255, 255, 255),
+                                          fontWeight: FontWeight.w400),),
                               );
                             },
                           )),
