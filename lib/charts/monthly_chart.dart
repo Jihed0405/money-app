@@ -74,7 +74,7 @@ class MonthlyChart extends StatelessWidget {
                   index, groupedExpenses[index]?.sum() ?? 0.0, 6)),
           titlesData: titlesData,
           gridData: FlGridData(
-            show: true,
+            show: false,
             drawVerticalLine: false,
           ),
         ),

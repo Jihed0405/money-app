@@ -106,7 +106,7 @@ class YearlyChart extends StatelessWidget {
                   index, groupedExpenses[index]?.sum() ?? 0.0, 15)),
           titlesData: titlesData,
           gridData: FlGridData(
-            show: true,
+            show: false,
             drawVerticalLine: false,
           ),
         ),

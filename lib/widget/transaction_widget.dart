@@ -18,7 +18,10 @@ class TransactionWidget extends StatelessWidget {
     }
   @override
   Widget build(BuildContext context) {
-   
+  if(transaction==null){
+    return const Text("no data found");
+  }
+  else {
     return Container(
         margin: const EdgeInsets.symmetric(vertical: defaultSpacing / 2),
         decoration: const BoxDecoration(
@@ -158,5 +161,6 @@ class TransactionWidget extends StatelessWidget {
             ],
           ),
         ));
+  }
   }
 }

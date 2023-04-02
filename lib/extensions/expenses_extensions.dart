@@ -33,7 +33,7 @@ extension ExpensesExtension on List<Transaction> {
     endDate = DateTime(endDate.year, endDate.month, endDate.day, 23, 59, 59);
 
     forEach((element) {
-      if (element.date.isBetween(startDate, endDate)) {
+      if (element.date.isBetween(startDate, endDate)&&element.transactionType==TransactionType.outflow) {
         expenses.add(element);
       }
 
@@ -43,7 +43,11 @@ extension ExpensesExtension on List<Transaction> {
   }
  List filterByCategory(int categoryIndex) {
     List<Transaction> expenses = [];
+    
     forEach((element) {
+      if(getCategory(categoryIndex)=="All"){
+        expenses.add(element);
+      }
       if (element.categoryType==getCategory(categoryIndex)) {
         expenses.add(element);
       }
@@ -101,6 +105,8 @@ extension ExpensesExtension on List<Transaction> {
   }
   String getCategory(int categoryIndex ){
     switch(categoryIndex){
+      case 0 :
+      return "All";
       case 1 : 
        return "Fashion";
        case 2 :

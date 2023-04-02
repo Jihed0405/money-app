@@ -2,12 +2,13 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_money_app/data/transaction.dart';
+import 'package:flutter_money_app/extensions/expenses_extensions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:state_notifier/state_notifier.dart';
 
 import '../types/period.dart';
 
-
+ 
 // Book State Notifier
 final visibleButtonProvider = StateProvider<bool>((ref) {
   return true ;
@@ -31,19 +32,29 @@ final selectedCategoryIndex = StateProvider<int>((ref) {
    
 });
 final expenses = StateProvider<List<Transaction>>((ref) {
-return [];
+  var filterResults = ref.read(transactionProvider.notifier).state.filterByPeriod(periods[ref.watch(selectedPeriodIndex)], 0);
+return filterResults[0] as List<Transaction>;
+}); 
+final expensesFiltered = StateProvider<List<Transaction>>((ref) {
+var filterResults = ref.read(transactionProvider.notifier).state.filterByPeriod(periods[ref.watch(selectedPeriodIndex)], 0);
+return filterResults[0] as List<Transaction>;
+
 }); 
 final  startDate = StateProvider<DateTime>((ref){
-return DateTime.now();
+  var filterResults = ref.read(transactionProvider.notifier).state.filterByPeriod(periods[ref.watch(selectedPeriodIndex)], 0);
+   return filterResults[1] as DateTime;
+
 });
 final  endDate = StateProvider<DateTime>((ref){
-return DateTime.now();
+  var filterResults = ref.read(transactionProvider.notifier).state.filterByPeriod(periods[ref.watch(selectedPeriodIndex)], 0);
+   
+return filterResults[2] as DateTime; 
 });
 final spentInPeriod= StateProvider<double>((ref) {
-  return 0.0;
+  return ref.watch(expenses).sum();
 });
 final avgPerDay= StateProvider<double>((ref) {
-  return 0.0;
+  return ref.watch(spentInPeriod) / ref.watch(endDate).difference(ref.watch(startDate)).inDays;
 });
 final periodIndex = StateProvider<int>((ref) {
   return 1;
