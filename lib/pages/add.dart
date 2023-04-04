@@ -48,7 +48,7 @@ class AddWidget extends StatefulWidget {
 class _AddWidgetState extends State<AddWidget> {
   List<bool> isSelected = <bool>[true, false];
   bool _expenses = false;
-   bool _canSubmit = false;
+  bool _canSubmit = false;
   DateTime _selectedDate = DateTime.now();
 
   late String _itemCategory;
@@ -65,14 +65,14 @@ class _AddWidgetState extends State<AddWidget> {
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
-        _dateController.text=picked.formattedDate;
+        _dateController.text = picked.formattedDate;
       });
     }
   }
 
-   late TextEditingController _amountController;
+  late TextEditingController _amountController;
   late TextEditingController _noteController;
-   late TextEditingController _nameController; 
+  late TextEditingController _nameController;
   late TextEditingController _dateController;
   String dropdownValueExpenses = listCategory.first;
   String dropdownValueIncome = listIncome.first;
@@ -80,10 +80,10 @@ class _AddWidgetState extends State<AddWidget> {
   @override
   void initState() {
     super.initState();
-    
+
     _amountController = TextEditingController();
     _noteController = TextEditingController();
-     _nameController = TextEditingController();
+    _nameController = TextEditingController();
     _dateController = TextEditingController();
     _expenses = false;
   }
@@ -92,37 +92,36 @@ class _AddWidgetState extends State<AddWidget> {
   void dispose() {
     _amountController.dispose();
     _noteController.dispose();
-     _nameController.dispose();
+    _nameController.dispose();
     _dateController.dispose();
     super.dispose();
   }
 
-  void submitExpense(DataStateNotifier dataStateNotifier,WidgetRef ref) {
-    final mymodel= MyModel();
+  void submitExpense(DataStateNotifier dataStateNotifier, WidgetRef ref) {
+    final mymodel = MyModel();
     switch (_expenses) {
       case true:
         setState(() {
-        _transactionType = TransactionType.outflow;
-        _itemCategory = dropdownValueExpenses;
-          
+          _transactionType = TransactionType.outflow;
+          _itemCategory = dropdownValueExpenses;
         });
         break;
-        case false:
+      case false:
         setState(() {
-        _transactionType = TransactionType.inflow;
-      _itemCategory = dropdownValueIncome;
-       
+          _transactionType = TransactionType.inflow;
+          _itemCategory = dropdownValueIncome;
         });
-       }
-    transaction = Transaction(20,
-      _itemCategory,
+    }
+    transaction = Transaction(
+        20,
+        _itemCategory,
         _transactionType,
         _nameController.value.text,
         _noteController.value.text,
         double.parse(_amountController.value.text),
-       _selectedDate);
-mymodel.postData(transaction, ref);
-   
+        _selectedDate);
+    mymodel.postData(transaction, ref);
+
     setState(() {
       _amountController.clear();
       dropdownValueRecurrence = listRecurrence.first;
@@ -144,28 +143,29 @@ mymodel.postData(transaction, ref);
         top: true,
         child: Column(
           children: [
-            Consumer(
-                 builder: (context, ref, child) {
+            Consumer(builder: (context, ref, child) {
               return AppBar(
-                centerTitle: true,
-                title: Text(
-                  " Add Expenses",
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(fontWeight: FontWeight.w700),
-                ),
-                elevation: 0,
-                backgroundColor: background,
-                leading:IconButton( 
-                icon : const Icon(
-                  Icons.arrow_back_ios,
-                  color: fontDark,
-                ),onPressed: (){
-          ref.read(currentPageIndex.notifier).state= ref.watch(precedentPageIndex);
-        },)
-              );}
-            ),
+                  centerTitle: true,
+                  title: Text(
+                    " Add Expenses",
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(fontWeight: FontWeight.w700),
+                  ),
+                  elevation: 0,
+                  backgroundColor: background,
+                  leading: IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back_ios,
+                      color: fontDark,
+                    ),
+                    onPressed: () {
+                      ref.read(currentPageIndex.notifier).state =
+                          ref.watch(precedentPageIndex);
+                    },
+                  ));
+            }),
             const SizedBox(
               height: defaultSpacing,
             ),
@@ -258,8 +258,9 @@ mymodel.postData(transaction, ref);
                         ],
                         controller: _amountController,
                         onSubmitted: (String value) async {
-                           setState(() => _canSubmit =
-                                _dateController.text.isNotEmpty && value.isNotEmpty);
+                          setState(() => _canSubmit =
+                              _dateController.text.isNotEmpty &&
+                                  value.isNotEmpty);
                         },
                       ),
                     ),
@@ -364,7 +365,6 @@ mymodel.postData(transaction, ref);
                           ),
                           Expanded(
                             child: TextField(
-                              
                               decoration: InputDecoration(
                                 hintText: 'Date',
                                 enabled: false,
@@ -380,8 +380,8 @@ mymodel.postData(transaction, ref);
                               ),
                               controller: _dateController,
                               onSubmitted: (String value) async {
-                                 setState(() => _canSubmit =
-                                value.isNotEmpty && _amountController.text.isNotEmpty);
+                                setState(() => _canSubmit = value.isNotEmpty &&
+                                    _amountController.text.isNotEmpty);
                               },
                             ),
                           ),
@@ -598,16 +598,23 @@ mymodel.postData(transaction, ref);
                                     backgroundColor: Colors.transparent,
                                     shadowColor: Colors.transparent),
                                 onPressed: () {
-                                 _canSubmit ? submitExpense(dataStateNotifier,ref) : null;
+                                  _canSubmit
+                                      ? submitExpense(dataStateNotifier, ref)
+                                      : null;
                                 },
-                                child:  Text('Add',style: Theme.of(context)
+                                child: Text(
+                                  'Add',
+                                  style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium
                                       ?.copyWith(
-                                          color:  _canSubmit
-                              ? const Color.fromARGB(255, 255, 255, 255)
-                              : const Color.fromARGB(100, 255, 255, 255),
-                                          fontWeight: FontWeight.w400),),
+                                          color: _canSubmit
+                                              ? const Color.fromARGB(
+                                                  255, 255, 255, 255)
+                                              : const Color.fromARGB(
+                                                  100, 255, 255, 255),
+                                          fontWeight: FontWeight.w400),
+                                ),
                               );
                             },
                           )),

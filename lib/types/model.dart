@@ -65,5 +65,37 @@ void postData(Transaction data,ref)async{
   }
 }
 
+void editData(Transaction data,ref)async{
+  var liste = [];
+  var type =data.transactionType==TransactionType.outflow
+  ?"O":"I";
+  var specificUrl = url +"/"+ref.watch(currentTransactionToEdit).id;
+  try {
+    http.Response response=await http.put(uri.pspecificUrl.pa,
+     headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, dynamic>{
+      "categoryType": data.categoryType,
+      "type":type,
+       "itemCategoryName": data.itemCategoryName,
+        "itemName": data.itemName,
+        "amount": data.amount,
+        "date": data.date.toIso8601String()
+    }),
+    );
+    if(response.statusCode==200){
+     
+    ref.invalidate(transactionProvider);
+    }
+    else{
+      print("something goes wrong when editing new data");
+    }
+  } catch (e) {
+    print("Error is $e");
+    
+  }
+}
+
 
 }

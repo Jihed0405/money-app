@@ -21,34 +21,32 @@ final amountController = StateProvider<TextEditingController>((ref) {
   return TextEditingController(
       text: '${ref.watch(currentTransactionToEdit).amount}');
 });
-   final noteController = StateProvider<TextEditingController>((ref) {
+final noteController = StateProvider<TextEditingController>((ref) {
   return TextEditingController(
       text: ref.watch(currentTransactionToEdit).itemName);
-}); 
-      final nameController = StateProvider<TextEditingController>((ref) {
+});
+final nameController = StateProvider<TextEditingController>((ref) {
   return TextEditingController(
       text: ref.watch(currentTransactionToEdit).itemCategoryName);
-}); 
-    final transactionType = StateProvider((ref) {
+});
+final transactionType = StateProvider((ref) {
   return TransactionType.inflow;
 });
-      final itemCategory = StateProvider((ref) {
+final itemCategory = StateProvider((ref) {
   return "";
 });
-     final dropdownValueExpenses = StateProvider((ref) {
-  return ref.watch(currentTransactionToEdit).categoryType??" ";
+final dropdownValueExpenses = StateProvider((ref) {
+  return ref.watch(currentTransactionToEdit).categoryType ?? " ";
 });
-  final dropdownValueIncome = StateProvider((ref) {
-  return ref.watch(currentTransactionToEdit).categoryType??" ";
+final dropdownValueIncome = StateProvider((ref) {
+  return ref.watch(currentTransactionToEdit).categoryType ?? " ";
 });
-    final dropdownValueRecurrence = StateProvider((ref) {
-  return "None"??" ";
+final dropdownValueRecurrence = StateProvider((ref) {
+  return "None" ?? " ";
 });
-  final canSubmit = StateProvider((ref) {
+final canSubmit = StateProvider((ref) {
   return false;
 });
-  
-  
 
 final precedentPageIndex = StateProvider<int>((ref) {
   return 0;
@@ -58,8 +56,8 @@ final currentPageIndex = StateProvider<int>((ref) {
 });
 
 final currentTransactionToEdit = StateProvider<Transaction>((ref) {
-  return Transaction(
-      0, "Entertainment", TransactionType.outflow, "jihed", "en othmen", 0, DateTime.now());
+  return Transaction(0, "Entertainment", TransactionType.outflow, "jihed",
+      "en othmen", 0, DateTime.now());
 });
 final visibleButtonProvider = StateProvider<bool>((ref) {
   return true;
