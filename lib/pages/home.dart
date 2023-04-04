@@ -4,18 +4,27 @@ import 'package:flutter_money_app/utils/constants.dart';
 import '../data/data_state_notifier.dart';
 import '../data/transaction.dart';
 import '../data/user_info.dart';
+import '../types/model.dart';
 import '../widget/income_widget.dart';
 import '../widget/transaction_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'dart:convert';
 class Home extends ConsumerWidget {
   Home({Key? key}) : super(key: key);
   var listeVisible;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<Transaction> transactionList = ref.watch(transactionProvider);
-     
-    return SingleChildScrollView(
+ 
+  
+   final List<Transaction> transactionList = ref.watch(transactionProvider);
+  final mymodel= MyModel();
+  return FutureBuilder(
+    future: mymodel.fetchData(ref),
+    
+    builder: (BuildContext context, AsyncSnapshot snapshot) {
+     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(defaultSpacing),
         child: Column(
@@ -110,6 +119,9 @@ class Home extends ConsumerWidget {
           ],
         ),
       ),
-    );
+    );     
+    },
+  );
+   
   }
 }

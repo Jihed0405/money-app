@@ -5,6 +5,7 @@ import 'package:flutter_money_app/data/transaction.dart';
 import 'package:flutter_money_app/extensions/date_extensions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/data_state_notifier.dart';
+import '../types/model.dart';
 import '../utils/constants.dart';
 import '../widget/custom_toggle.dart';
 import 'dart:async';
@@ -96,7 +97,8 @@ class _AddWidgetState extends State<AddWidget> {
     super.dispose();
   }
 
-  void submitExpense(DataStateNotifier dataStateNotifier) {
+  void submitExpense(DataStateNotifier dataStateNotifier,WidgetRef ref) {
+    final mymodel= MyModel();
     switch (_expenses) {
       case true:
         setState(() {
@@ -119,8 +121,8 @@ class _AddWidgetState extends State<AddWidget> {
         _noteController.value.text,
         double.parse(_amountController.value.text),
        _selectedDate);
-
-    dataStateNotifier.addTransaction(transaction);
+mymodel.postData(transaction, ref);
+   
     setState(() {
       _amountController.clear();
       dropdownValueRecurrence = listRecurrence.first;
@@ -596,7 +598,7 @@ class _AddWidgetState extends State<AddWidget> {
                                     backgroundColor: Colors.transparent,
                                     shadowColor: Colors.transparent),
                                 onPressed: () {
-                                 _canSubmit ? submitExpense(dataStateNotifier) : null;
+                                 _canSubmit ? submitExpense(dataStateNotifier,ref) : null;
                                 },
                                 child:  Text('Add',style: Theme.of(context)
                                       .textTheme

@@ -7,6 +7,7 @@ import 'package:flutter_money_app/extensions/expenses_extensions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:state_notifier/state_notifier.dart';
 
+import '../types/model.dart';
 import '../types/period.dart';
 
 final selectedDate = StateProvider((ref) {
@@ -146,7 +147,7 @@ final controllerPage = StateProvider((ref) {
 
 class DataStateNotifier extends StateNotifier<List<Transaction>> {
   // Zero argument constructor for the super class
-  DataStateNotifier() : super(transaction1);
+  DataStateNotifier() : super([]);
 
   // Add a Transaction to the state
   void addTransaction(Transaction transactionToAdd) =>

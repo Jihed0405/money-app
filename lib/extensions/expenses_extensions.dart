@@ -55,6 +55,12 @@ extension ExpensesExtension on List<Transaction> {
      return [expenses];
 
  }
+ List filterZero() {
+    List<Transaction> expenses = [];
+    expenses.length=0;
+     return [expenses];
+
+ }
   double sum() {
     double sum = 0;
     forEach((element) {
