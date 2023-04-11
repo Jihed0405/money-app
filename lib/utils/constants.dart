@@ -31,5 +31,5 @@ const double defaultRadius = 12.0;
 const double fontSizeHeading = 18.0;
 const double fontSizeTitle = 16.0;
 const double fontSizeBody = 13.0;
- const url ='http://192.168.101.42:8000/api/v2/money/';
+ const url ='http://192.168.1.52:8000/api/v2/money/';
   final uri = Uri.parse(url);

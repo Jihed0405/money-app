@@ -69,9 +69,10 @@ void editData(Transaction data,ref)async{
   var liste = [];
   var type =data.transactionType==TransactionType.outflow
   ?"O":"I";
-  var specificUrl = url +"/"+ref.watch(currentTransactionToEdit).id;
+  
   try {
-    http.Response response=await http.put(uri.pspecificUrl.pa,
+    var specificUrl = "${url}${ref.watch(currentTransactionToEdit).id}/";
+    http.Response response=await http.put(Uri.parse(specificUrl),
      headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
