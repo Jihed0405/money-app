@@ -33,3 +33,9 @@ const double fontSizeTitle = 16.0;
 const double fontSizeBody = 13.0;
  const url ='http://192.168.1.52:8000/api/v2/money/';
   final uri = Uri.parse(url);
+ formatNumber(ele){
+if(ele==0) {
+  return ele.toStringAsFixed(0);
+} else {
+  return ele.toStringAsFixed(3);
+}}

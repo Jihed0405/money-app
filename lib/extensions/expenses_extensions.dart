@@ -69,6 +69,27 @@ extension ExpensesExtension on List<Transaction> {
     return sum;
   }
 
+  double sumIncome() {
+    double sum = 0;
+    forEach((element) {
+      if(element.transactionType==TransactionType.inflow) {
+        sum += element.amount;
+      }
+    });
+    return sum;
+  }
+  
+  
+  double sumExpense() {
+    double sum = 0;
+    forEach((element) {
+      if(element.transactionType==TransactionType.outflow) {
+        sum += element.amount;
+      }
+    });
+    return sum;
+  }
+ 
   groupWeekly() {
     final Map<String, List<Transaction>> grouped = {
       "Monday": [],

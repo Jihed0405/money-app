@@ -98,5 +98,24 @@ void editData(Transaction data,ref)async{
   }
 }
 
+void deleteTransaction(ref)async{
+   
+  if (ref.watch(currentTransactionToEdit).id!=0) {
+   
+     var deleteUrl = "${url}${ref.watch(currentTransactionToEdit).id}/"; 
+final http.Response response = await http.delete(Uri.parse(deleteUrl),
+     headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },);
+    if(response.statusCode==204){
+   ref.invalidate(transactionProvider);
+    }
+    else{
+      throw Exception("Failed to delete transaction");
+    }
+  }
+  
+}
+
 
 }

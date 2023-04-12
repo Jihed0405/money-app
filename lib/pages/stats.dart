@@ -54,7 +54,7 @@ class Stats extends ConsumerWidget {
       ref.read(expensesFiltered.notifier).state = expense;
       ref.read(startDate.notifier).state = start;
       ref.read(endDate.notifier).state = end;
-      ref.read(spentInPeriod.notifier).state = ref.watch(expenses).sum();
+      ref.read(spentInPeriod.notifier).state = ref.watch(expenses).sumExpense();
       ref.read(avgPerDay.notifier).state = ref.watch(spentInPeriod) / numOfDays;
     }
 
