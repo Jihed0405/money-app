@@ -28,8 +28,8 @@ class Transaction {
   TransactionType transactionType;
   final String itemCategoryName;
   final String itemName;
-  final double amount;
-  final DateTime date;
+   double amount;
+   DateTime date;
   Transaction(
     this.id,
     this.categoryType,

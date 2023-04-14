@@ -10,44 +10,6 @@ import 'package:state_notifier/state_notifier.dart';
 import '../types/model.dart';
 import '../types/period.dart';
 
-final selectedDate = StateProvider((ref) {
-  return DateTime.now();
-});
-final dateController = StateProvider<TextEditingController>((ref) {
-  return TextEditingController(
-      text: '${ref.watch(currentTransactionToEdit).date.formattedDate}');
-});
-final amountController = StateProvider<TextEditingController>((ref) {
-  return TextEditingController(
-      text: '${ref.watch(currentTransactionToEdit).amount}');
-});
-final noteController = StateProvider<TextEditingController>((ref) {
-  return TextEditingController(
-      text: ref.watch(currentTransactionToEdit).itemName);
-});
-final nameController = StateProvider<TextEditingController>((ref) {
-  return TextEditingController(
-      text: ref.watch(currentTransactionToEdit).itemCategoryName);
-});
-final transactionType = StateProvider((ref) {
-  return TransactionType.inflow;
-});
-final itemCategory = StateProvider((ref) {
-  return "";
-});
-final dropdownValueExpenses = StateProvider((ref) {
-  return ref.watch(currentTransactionToEdit).categoryType ?? " ";
-});
-final dropdownValueIncome = StateProvider((ref) {
-  return ref.watch(currentTransactionToEdit).categoryType ?? " ";
-});
-final dropdownValueRecurrence = StateProvider((ref) {
-  return "None" ?? " ";
-});
-final canSubmit = StateProvider((ref) {
-  return false;
-});
-
 final precedentPageIndex = StateProvider<int>((ref) {
   return 0;
 });
@@ -68,22 +30,7 @@ final selectedPeriodIndex = StateProvider<int>((ref) {
 final selectedCategoryIndex = StateProvider<int>((ref) {
   return 0;
 });
-final isSelectedExpenses = StateProvider((ref) {
-  if (ref.watch(currentTransactionToEdit).transactionType ==
-      TransactionType.outflow) {
-    return <bool>[false, true];
-  } else {
-    return <bool>[true, false];
-  }
-});
-final isExpenses = StateProvider((ref) {
-  if (ref.watch(currentTransactionToEdit).transactionType ==
-      TransactionType.outflow) {
-    return true;
-  } else {
-    return false;
-  }
-});
+
 
 StateProvider<int> numberOfPages = StateProvider<int>((ref) {
   switch (periods[ref.watch(selectedPeriodIndex)]) {

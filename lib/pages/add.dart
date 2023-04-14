@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'dart:developer' as developer;
 import 'package:flutter/services.dart';
 import 'package:flutter_money_app/data/transaction.dart';
 import 'package:flutter_money_app/extensions/date_extensions.dart';
@@ -179,8 +180,11 @@ class _AddWidgetState extends State<AddWidget> {
                           buttonIndex++) {
                         isSelected[buttonIndex] = buttonIndex == index;
                         if (index == 1) {
+                          developer.log("${isSelected}");
                           _expenses = true;
+                          
                         } else {
+                           developer.log("${isSelected[buttonIndex] = buttonIndex == index}");
                           _expenses = false;
                         }
                       }
