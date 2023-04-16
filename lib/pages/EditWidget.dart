@@ -43,10 +43,13 @@ const List<String> listRecurrence = <String>[
 class EditWidget extends ConsumerStatefulWidget {
   EditWidget({Key? key}) : super(key: key);
   @override
-  ConsumerState<EditWidget> createState() => _EditWidgetState();
+  EditWidgetState createState() => EditWidgetState();
 }
 
-class _EditWidgetState extends ConsumerState<EditWidget> {
+class EditWidgetState extends ConsumerState<EditWidget> {
+  FocusNode noteFocusNode = FocusNode();
+  FocusNode nameFocusNode = FocusNode();
+   FocusNode amountFocusNode = FocusNode();
   late TextEditingController _amountController;
   late TextEditingController _noteController;
   late TextEditingController _nameController;
@@ -57,7 +60,7 @@ class _EditWidgetState extends ConsumerState<EditWidget> {
   late List<bool> isSelected;
 
   late bool _expenses;
-  bool _canSubmit = true;
+  late bool _canSubmit;
   DateTime _selectedDate = DateTime.now();
 
   late String _itemCategory;
@@ -67,21 +70,51 @@ class _EditWidgetState extends ConsumerState<EditWidget> {
   @override
   void initState() {
     // _amountController = TextEditingController();
-
+    _canSubmit = true;
     _amountController = TextEditingController(
         text: '${ref.read(currentTransactionToEdit).amount}');
-
     _noteController = TextEditingController(
         text: ref.read(currentTransactionToEdit).itemName);
     _nameController = TextEditingController(
         text: ref.read(currentTransactionToEdit).itemCategoryName);
+    noteFocusNode.addListener(() {
+      if (!noteFocusNode.hasFocus) {
+        ref.read(currentTransactionToEdit).itemName =
+            _noteController.value.text;
+        method();
+      }
+    });
+    nameFocusNode.addListener(() {
+      if (!nameFocusNode.hasFocus) {
+        ref.read(currentTransactionToEdit).itemCategoryName =
+            _nameController.value.text;
+        method();
+      }
+    });
+    amountFocusNode.addListener(() {
+      if (!amountFocusNode.hasFocus) {
+       if (_amountController.value.text != "") {
+                            ref.read(currentTransactionToEdit).amount =
+                                double.parse(_amountController.value.text);
+                          } else {
+                            ref.read(currentTransactionToEdit).amount = 0;
+                          }
+        method();
+      }
+    });
     _dateController = TextEditingController(
         text: '${ref.read(currentTransactionToEdit).date.formattedDate}');
-
-    _canSubmit =
-        _dateController.text.isNotEmpty && _amountController.text.isNotEmpty;
-
+_expenses=false;
     super.initState();
+  }
+
+  void method() {
+    
+    setState(() {
+      _canSubmit = (_amountController.value.text != "" &&   double.parse(_amountController.value.text)!=0&&
+          _nameController.value.text != "" &&
+          _noteController.value.text != "");
+    });
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -94,13 +127,14 @@ class _EditWidgetState extends ConsumerState<EditWidget> {
       setState(() {
         _selectedDate = picked;
         _dateController.text = picked.formattedDate;
-        ref.watch(currentTransactionToEdit).date=picked;
+        ref.watch(currentTransactionToEdit).date = picked;
       });
     }
   }
 
   void submitExpense() {
-    final mymodel = MyModel();
+    final myModel = MyModel();
+    developer.log(dropdownValueExpenses);
     switch (_expenses) {
       case true:
         setState(() {
@@ -116,25 +150,41 @@ class _EditWidgetState extends ConsumerState<EditWidget> {
         });
     }
     transaction = Transaction(
-        20,
+        ref.watch(currentTransactionToEdit).id,
         _itemCategory,
         _transactionType,
         _nameController.value.text,
         _noteController.value.text,
         double.parse(_amountController.value.text),
         _selectedDate);
-    
-    /*mymodel.editData(transaction, ref);
-    //dataStateNotifier.addTransaction(transaction);
 
-    ref.read(amountController.notifier).state.clear();
-    ref.read(dropdownValueRecurrence.notifier).state = listRecurrence.first;
-    ref.read(dateController.notifier).state.clear();
-    ref.read(noteController.notifier).state.clear();
-    ref.read(nameController.notifier).state.clear();
-    ref.read(dropdownValueExpenses.notifier).state = listCategory.first;
-    ref.read(dropdownValueIncome.notifier).state = listIncome.first;
-   */
+    myModel.editData(transaction, ref);
+    //dataStateNotifier.addTransaction(transaction);
+    setState(() {
+      _amountController.clear();
+      dropdownValueRecurrence = listRecurrence.first;
+      _dateController.clear();
+      _noteController.clear();
+      _nameController.clear();
+      dropdownValueExpenses = listCategory.first;
+      dropdownValueIncome = listIncome.first;
+    });
+     ref.read(currentPageIndex.notifier).state=0;
+          ref.read(visibleButtonProvider.notifier).state=true;
+  }
+
+  @override
+  void dispose() {
+     noteFocusNode.dispose();
+   nameFocusNode.dispose();
+    amountFocusNode.dispose();
+    _noteController.dispose();
+     _amountController.dispose();
+      
+      _dateController.dispose();
+     
+      _nameController.dispose(); 
+         super.dispose();
   }
 
   @override
@@ -143,16 +193,20 @@ class _EditWidgetState extends ConsumerState<EditWidget> {
     double defaultHeight = MediaQuery.of(context).size.height;
     _amountController = TextEditingController(
         text: '${ref.watch(currentTransactionToEdit).amount}');
-    _noteController = TextEditingController(
-        text: ref.watch(currentTransactionToEdit).itemName);
+    final state = ref.watch(currentTransactionToEdit).itemName;
     _nameController = TextEditingController(
         text: ref.watch(currentTransactionToEdit).itemCategoryName);
+    _noteController = TextEditingController(
+        text: ref.watch(currentTransactionToEdit).itemName);
     _dateController = TextEditingController(
         text: '${ref.watch(currentTransactionToEdit).date.formattedDate}');
     if (ref.watch(currentTransactionToEdit).transactionType ==
         TransactionType.outflow) {
       isSelected = <bool>[false, true];
-      _expenses = true;
+      setState(() {
+      _expenses = true;  
+      });
+      
       if (listCategory
           .contains(ref.read(currentTransactionToEdit).categoryType)) {
         dropdownValueExpenses = ref.read(currentTransactionToEdit).categoryType;
@@ -161,7 +215,10 @@ class _EditWidgetState extends ConsumerState<EditWidget> {
       }
     } else {
       isSelected = <bool>[true, false];
-      _expenses = false;
+      setState(() {
+      _expenses = false;  
+      });
+      
       if (listIncome
           .contains(ref.read(currentTransactionToEdit).categoryType)) {
         dropdownValueIncome = ref.read(currentTransactionToEdit).categoryType;
@@ -169,10 +226,10 @@ class _EditWidgetState extends ConsumerState<EditWidget> {
         dropdownValueIncome = listIncome.first;
       }
     }
-    
-    return SingleChildScrollView(
-      child: SafeArea(
-        top: true,
+
+    return SafeArea(
+      top: true,
+      child: SingleChildScrollView(
         child: Column(
           children: [
             AppBar(
@@ -207,10 +264,30 @@ class _EditWidgetState extends ConsumerState<EditWidget> {
                           ref.read(currentTransactionToEdit).transactionType =
                               TransactionType.outflow;
                           _expenses = true;
+                          if (_amountController.value.text != "") {
+                            ref.read(currentTransactionToEdit).amount =
+                                double.parse(_amountController.value.text);
+                          } else {
+                            ref.read(currentTransactionToEdit).amount = 0;
+                          }
+                          ref.read(currentTransactionToEdit).itemCategoryName =
+                              _nameController.value.text;
+                          ref.read(currentTransactionToEdit).itemName =
+                              _noteController.value.text;
                         } else {
                           ref.read(currentTransactionToEdit).transactionType =
                               TransactionType.inflow;
-                         
+
+                          if (_amountController.value.text != "") {
+                            ref.read(currentTransactionToEdit).amount =
+                                double.parse(_amountController.value.text);
+                          } else {
+                            ref.read(currentTransactionToEdit).amount = 0;
+                          }
+                          ref.read(currentTransactionToEdit).itemCategoryName =
+                              _nameController.value.text;
+                          ref.read(currentTransactionToEdit).itemName =
+                              _noteController.value.text;
                           _expenses = false;
                         }
                       }
@@ -260,6 +337,7 @@ class _EditWidgetState extends ConsumerState<EditWidget> {
                                 color: Colors.grey.withOpacity(0.2))
                           ]),
                       child: TextField(
+                         focusNode: amountFocusNode,
                         decoration: InputDecoration(
                           hintText: 'Amount',
                           prefixIcon: Icon(
@@ -284,20 +362,23 @@ class _EditWidgetState extends ConsumerState<EditWidget> {
                                     decimal: true),
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(
-                              RegExp(r'^(\d+)?\.?\d{0,2}'))
+                              RegExp(r'^(\d+)?\.?\d{0,3}'))
                         ],
                         controller: _amountController,
                         onSubmitted: (String value) async {
-                          setState(() {if(value==""){
-                            ref.read(currentTransactionToEdit).amount=0;
-                          }
-                          else{
-                            developer.log("${double.parse(value)}");
-                          ref.read(currentTransactionToEdit).amount=double.parse(value);
-                        }
-                          _canSubmit =
-                              _dateController.text.isNotEmpty &&value!="";});
-                                developer.log("${ref.read(currentTransactionToEdit).amount}");
+                          setState(() {
+                            if (value == "") {
+                              ref.read(currentTransactionToEdit).amount = 0;
+                            } else {
+                              developer.log("${double.parse(value)}");
+                              ref.read(currentTransactionToEdit).amount =
+                                  double.parse(value);
+                            }
+                            //_canSubmit =
+                            //  _dateController.text.isNotEmpty && value != "";
+                          });
+                          developer.log(
+                              "${ref.read(currentTransactionToEdit).amount}");
                         },
                       ),
                     ),
@@ -417,10 +498,7 @@ class _EditWidgetState extends ConsumerState<EditWidget> {
                                 border: InputBorder.none,
                               ),
                               controller: _dateController,
-                              onSubmitted: (String value) async {
-                                setState(() => _canSubmit = value!="" &&
-                                    _amountController.text.isNotEmpty);
-                              },
+                              onSubmitted: (String value) async {},
                             ),
                           ),
                         ],
@@ -440,6 +518,7 @@ class _EditWidgetState extends ConsumerState<EditWidget> {
                           ]),
                       child: TextField(
                         enableSuggestions: false,
+                        focusNode: nameFocusNode,
                         decoration: InputDecoration(
                           hintText: 'Name',
                           prefixIcon: _expenses
@@ -477,7 +556,8 @@ class _EditWidgetState extends ConsumerState<EditWidget> {
                                 offset: const Offset(1, 1),
                                 color: Colors.grey.withOpacity(0.2))
                           ]),
-                      child: TextField(
+                      child: TextFormField(
+                        focusNode: noteFocusNode,
                         enableSuggestions: false,
                         decoration: InputDecoration(
                           hintText: 'Note',
@@ -496,7 +576,8 @@ class _EditWidgetState extends ConsumerState<EditWidget> {
                           border: InputBorder.none,
                         ),
                         controller: _noteController,
-                        onSubmitted: (String value) async {},
+
+                        // onSubmitted: (String? value) async {},
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -555,8 +636,10 @@ class _EditWidgetState extends ConsumerState<EditWidget> {
                                   setState(() {
                                     if (_expenses) {
                                       dropdownValueExpenses = value!;
+                                      ref.read(currentTransactionToEdit).categoryType=dropdownValueExpenses;
                                     } else {
                                       dropdownValueIncome = value!;
+                                       ref.read(currentTransactionToEdit).categoryType=dropdownValueIncome;
                                     }
                                   });
                                 },

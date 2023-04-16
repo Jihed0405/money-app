@@ -35,7 +35,7 @@ Transaction t =Transaction(transaction['id'],
   }};
 }
 void postData(Transaction data,ref)async{
-  var liste = [];
+  
   var type =data.transactionType==TransactionType.outflow
   ?"O":"I";
   try {
@@ -66,7 +66,7 @@ void postData(Transaction data,ref)async{
 }
 
 void editData(Transaction data,ref)async{
-  var liste = [];
+  
   var type =data.transactionType==TransactionType.outflow
   ?"O":"I";
   

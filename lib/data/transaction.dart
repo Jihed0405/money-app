@@ -24,10 +24,10 @@ enum ItemCategoryType {
 
 class Transaction {
   final int id;
-  final String categoryType;
+   String categoryType;
   TransactionType transactionType;
-  final String itemCategoryName;
-  final String itemName;
+   String itemCategoryName;
+   String itemName;
    double amount;
    DateTime date;
   Transaction(
