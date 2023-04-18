@@ -54,6 +54,14 @@ final expenses = StateProvider<List<Transaction>>((ref) {
 
   return [];
 });
+final todayTransactions = StateProvider<List<Transaction>>((ref){
+ 
+ return [];
+
+});
+final yesterdayTransactions = StateProvider<List<Transaction>>((ref){
+ return [];
+});
 final expensesFiltered = StateProvider<List<Transaction>>((ref) {
   var filterResults = ref
       .read(transactionProvider.notifier)
@@ -98,15 +106,7 @@ class DataStateNotifier extends StateNotifier<List<Transaction>> {
   // Zero argument constructor for the super class
   DataStateNotifier() : super([]);
 
-  // Add a Transaction to the state
-  void addTransaction(Transaction transactionToAdd) =>
-      state = [...state, transactionToAdd];
 
-  // Remove a Transaction from the state
-  void removeBook(Transaction transactionToRemove) => state = [
-        for (final transaction in state)
-          if (transaction != transactionToRemove) transaction,
-      ];
 }
 
 // The Transaction Provider

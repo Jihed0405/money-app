@@ -9,7 +9,6 @@ import '../charts/monthly_chart.dart';
 import '../charts/weekly_chart.dart';
 import '../charts/yearly_chart.dart';
 import '../data/transaction.dart';
-import '../data/user_info.dart';
 import '../types/model.dart';
 import '../types/period.dart';
 import '../utils/constants.dart';
@@ -269,7 +268,7 @@ class Stats extends ConsumerWidget {
                     }
                   }()),
                   (() {
-                    if (transactionList.isEmpty) {
+                    if (ref.watch(expenses).isEmpty) {
                       return const Text("No data for selected period!");
                     } else {
                       return Expanded(
@@ -297,7 +296,7 @@ class Stats extends ConsumerWidget {
                                     Container(
                                       height: 60,
                                       width: defaultWidth * 0.9,
-                                      decoration: BoxDecoration(
+                                      decoration: const BoxDecoration(
                                           color: Colors.transparent),
                                       child: ListView.builder(
                                         itemCount: 10,
@@ -362,6 +361,13 @@ class Stats extends ConsumerWidget {
                                     ),
                                   ],
                                 ),
+                                 const SizedBox(
+                height: defaultSpacing,
+              ),
+            if(ref.watch(expensesFiltered).isEmpty)
+              const Center(
+              child: Text("no data found"),
+            ),
                                 ...ref.watch(expensesFiltered).map(
                                     (transaction) => TransactionWidget(
                                         transaction: transaction)),

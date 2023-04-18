@@ -30,10 +30,14 @@ Transaction t =Transaction(transaction['id'],
                ref
           .read(transactionProvider.notifier)
           .state.add(t);
+        
          
     });
     //data=json.decode(data);
- 
+   var todayTrans=filterToday(ref.watch(transactionProvider));
+   var yesterdayTrans=filterYesterday(ref.watch(transactionProvider));
+ ref.read(todayTransactions.notifier).state= todayTrans[0];
+ref.read(yesterdayTransactions.notifier).state=yesterdayTrans[0];
   } catch (e) {
     print("error is $e ");
   }};
@@ -163,4 +167,28 @@ final http.Response response = await http.delete(Uri.parse(deleteUrl),
     return [expenses, startDate, endDate];
   }
 
+List filterToday(List<Transaction>list) {
+    List<Transaction> expenses = [];
+  
+      list.forEach((element) {
+      if (element.date.isToday()) {
+        expenses.add(element);
+      }
+
+    });
+     return [expenses];
+
+ }
+ List filterYesterday(List<Transaction>list) {
+    List<Transaction> expenses = [];
+  
+      list.forEach((element) {
+      if (element.date.isYesterday()) {
+        expenses.add(element);
+      }
+
+    });
+     return [expenses];
+
+ }
 }

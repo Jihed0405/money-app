@@ -110,9 +110,12 @@ class Home extends ConsumerWidget {
               const SizedBox(
                 height: defaultSpacing,
               ),
-            
-              ...ref.watch(transactionProvider).map(
-                  (transaction) =>(transaction.date.isToday()) ?Container():TransactionWidget(transaction: transaction)),
+            if(ref.watch(todayTransactions).isEmpty)
+              const Center(
+              child: Text("no data found"),
+            ),
+              ...ref.watch(todayTransactions).map(
+                  (transaction) =>TransactionWidget(transaction: transaction)),
               const SizedBox(
                 height: defaultSpacing,
               ),
@@ -120,8 +123,16 @@ class Home extends ConsumerWidget {
                 "Yesterday",
                 style: TextStyle(color: fontSubHeading),
               ),
-                ...ref.watch(transactionProvider).map(
-                 (transaction) =>(transaction.date.isYesterday()) ?Container():TransactionWidget(transaction: transaction)),
+               const SizedBox(
+                height: defaultSpacing,
+              ),
+            if(ref.watch(yesterdayTransactions).isEmpty)
+              const Center(
+              child: Text("no data found"),
+            ),
+                ...ref.watch(yesterdayTransactions).map(
+                 (transaction) =>TransactionWidget(transaction: transaction)),
+                
             ],
           ),
         ),

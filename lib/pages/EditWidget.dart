@@ -158,7 +158,7 @@ class EditWidgetState extends ConsumerState<EditWidget> {
         _selectedDate);
 
     myModel.editData(transaction, ref);
-    //dataStateNotifier.addTransaction(transaction);
+   
     setState(() {
       _amountController.clear();
       dropdownValueRecurrence = listRecurrence.first;
