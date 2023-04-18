@@ -724,6 +724,7 @@ class EditWidgetState extends ConsumerState<EditWidget> {
                                     Text('Transaction edited successfully!'),
                                 backgroundColor: Colors.teal,
                                 behavior: SnackBarBehavior.floating,
+                                duration: Duration(seconds: 20),
                               );
 
                               // Find the ScaffoldMessenger in the widget tree
@@ -736,6 +737,7 @@ class EditWidgetState extends ConsumerState<EditWidget> {
                                     'Something went wrong try again please!'),
                                 backgroundColor: Colors.teal,
                                 behavior: SnackBarBehavior.floating,
+                                duration: Duration(seconds: 20)
                               );
 
                               // Find the ScaffoldMessenger in the widget tree

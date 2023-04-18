@@ -20,6 +20,50 @@ class Wallet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final List<Transaction> transactionList = ref.watch(transactionProvider);
 
-    return Container();
+    return SafeArea(
+      top: true,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            AppBar(
+              centerTitle: true,
+              title: Text(
+                " My Wallet",
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(fontWeight: FontWeight.w700),
+              ),
+              elevation: 0,
+              backgroundColor: background,
+              leading: IconButton(
+              icon:const Icon(
+                Icons.arrow_back_ios,
+                color: fontDark,
+              ),    onPressed: () {
+                      ref.read(currentPageIndex.notifier).state =
+                          ref.watch(precedentPageIndex);
+                         ref.read(visibleButtonProvider.notifier).state=true;    
+                    })
+            ),
+            const SizedBox(
+              height: defaultSpacing,
+            ),
+             Padding(
+               padding: const EdgeInsets.all(16.0),
+               child: ClipRRect(
+                    borderRadius:
+                        const BorderRadius.all(Radius.circular(defaultRadius)),
+                    child: Image.asset(
+                      fit: BoxFit.contain,
+                      "assets/images/Wallet.png",
+                      width: 800,
+                    ),
+                  ),
+             ),
+        ],
+        ),
+));
+        
   }
 }
