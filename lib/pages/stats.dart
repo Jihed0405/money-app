@@ -89,6 +89,7 @@ class Stats extends ConsumerWidget {
         ),
          onPressed: (){
           ref.read(currentPageIndex.notifier).state= ref.watch(precedentPageIndex);
+             ref.read(visibleButtonProvider.notifier).state=true;
         },),
       ),
       /*  */

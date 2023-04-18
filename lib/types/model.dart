@@ -8,7 +8,6 @@ import 'dart:convert';
 import '../data/data_state_notifier.dart';
 import '../data/transaction.dart';
 import '../utils/constants.dart';
-import 'dart:developer' as developer;
 import 'package:flutter_money_app/extensions/expenses_extensions.dart';
 
 class MyModel{
@@ -73,7 +72,7 @@ void postData(Transaction data,ref)async{
     print("Error is $e");
     ref.read(responseData.notifier).state=false;
   }
-  developer.log("${ref.watch(responseData)}");
+ 
 }
 
 void editData(Transaction data,ref)async{
@@ -108,7 +107,7 @@ void editData(Transaction data,ref)async{
     print("Error is $e");
      ref.read(responseEditData.notifier).state=false;
   }
-  developer.log("${ref.watch(responseEditData)}");
+ 
 }
 
 void deleteTransaction(ref)async{

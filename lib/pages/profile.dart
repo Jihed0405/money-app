@@ -29,6 +29,7 @@ class Profile extends ConsumerWidget {
         ),
         onPressed: (){
           ref.read(currentPageIndex.notifier).state= ref.watch(precedentPageIndex);
+             ref.read(visibleButtonProvider.notifier).state=true;
         },),
         actions: const [
           Image(image: AssetImage("assets/icons/settings.png"))

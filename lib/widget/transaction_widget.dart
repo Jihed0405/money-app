@@ -4,7 +4,7 @@ import 'package:flutter_money_app/extensions/date_extensions.dart';
 import 'package:flutter_money_app/utils/constants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'dart:developer' as developer;
+
 import '../data/transaction.dart';
 import '../types/model.dart';
 
@@ -32,7 +32,9 @@ class TransactionWidget extends ConsumerWidget {
    
       
         return InkWell(onTap:() {
-          ref.read(currentPageIndex.notifier).state=5;
+          
+            ref.read(precedentPageIndex.notifier).state= ref.watch(currentPageIndex);
+    ref.read(currentPageIndex.notifier).state=5;
           ref.read(visibleButtonProvider.notifier).state=false;
           ref.read(currentTransactionToEdit.notifier).state=transaction;
         },

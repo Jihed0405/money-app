@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:developer' as developer;
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_money_app/data/data_state_notifier.dart';

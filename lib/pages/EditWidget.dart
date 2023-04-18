@@ -9,7 +9,7 @@ import '../types/model.dart';
 import '../utils/constants.dart';
 import '../widget/custom_toggle.dart';
 import 'dart:async';
-import 'dart:developer' as developer;
+
 
 const List<String> listCategory = <String>[
   'Fashion',
@@ -240,10 +240,15 @@ class EditWidgetState extends ConsumerState<EditWidget> {
               ),
               elevation: 0,
               backgroundColor: background,
-              leading: const Icon(
+              leading: IconButton(
+              icon:const Icon(
                 Icons.arrow_back_ios,
                 color: fontDark,
-              ),
+              ),    onPressed: () {
+                      ref.read(currentPageIndex.notifier).state =
+                          ref.watch(precedentPageIndex);
+                         ref.read(visibleButtonProvider.notifier).state=true;    
+                    })
             ),
             const SizedBox(
               height: defaultSpacing,
