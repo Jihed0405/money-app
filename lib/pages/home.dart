@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_money_app/data/expense.dart';
+import 'package:flutter_money_app/extensions/date_extensions.dart';
 import 'package:flutter_money_app/extensions/expenses_extensions.dart';
 import 'package:flutter_money_app/utils/constants.dart';
 import '../data/data_state_notifier.dart';
@@ -17,7 +18,7 @@ class Home extends ConsumerWidget {
   var listeVisible;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
- 
+
   
    final List<Transaction> transactionList = ref.watch(transactionProvider);
   final mymodel= MyModel();
@@ -109,8 +110,9 @@ class Home extends ConsumerWidget {
               const SizedBox(
                 height: defaultSpacing,
               ),
+            
               ...ref.watch(transactionProvider).map(
-                  (transaction) => TransactionWidget(transaction: transaction)),
+                  (transaction) =>(transaction.date.isToday()) ?Container():TransactionWidget(transaction: transaction)),
               const SizedBox(
                 height: defaultSpacing,
               ),
@@ -118,8 +120,8 @@ class Home extends ConsumerWidget {
                 "Yesterday",
                 style: TextStyle(color: fontSubHeading),
               ),
-              ...transaction2.map(
-                  (transaction) => TransactionWidget(transaction: transaction)),
+                ...ref.watch(transactionProvider).map(
+                 (transaction) =>(transaction.date.isYesterday()) ?Container():TransactionWidget(transaction: transaction)),
             ],
           ),
         ),

@@ -51,7 +51,9 @@ class _AddWidgetState extends State<AddWidget> {
   bool _expenses = false;
   bool _canSubmit = false;
   DateTime _selectedDate = DateTime.now();
-
+  FocusNode noteFocusNode = FocusNode();
+  FocusNode nameFocusNode = FocusNode();
+  FocusNode amountFocusNode = FocusNode();
   late String _itemCategory;
 
   late TransactionType _transactionType;
@@ -81,12 +83,35 @@ class _AddWidgetState extends State<AddWidget> {
   @override
   void initState() {
     super.initState();
-
+    noteFocusNode.addListener(() {
+      if (!noteFocusNode.hasFocus) {
+        method();
+      }
+    });
+    nameFocusNode.addListener(() {
+      if (!nameFocusNode.hasFocus) {
+        method();
+      }
+    });
+    amountFocusNode.addListener(() {
+      if (!amountFocusNode.hasFocus) {
+        method();
+      }
+    });
     _amountController = TextEditingController();
     _noteController = TextEditingController();
     _nameController = TextEditingController();
     _dateController = TextEditingController();
     _expenses = false;
+  }
+
+  void method() {
+    setState(() {
+      _canSubmit = (_amountController.value.text != "" &&
+          double.parse(_amountController.value.text) != 0 &&
+          _nameController.value.text != "" &&
+          _noteController.value.text != "");
+    });
   }
 
   @override
@@ -131,6 +156,7 @@ class _AddWidgetState extends State<AddWidget> {
       _nameController.clear();
       dropdownValueExpenses = listCategory.first;
       dropdownValueIncome = listIncome.first;
+      _canSubmit = false;
     });
   }
 
@@ -182,9 +208,9 @@ class _AddWidgetState extends State<AddWidget> {
                         if (index == 1) {
                           developer.log("${isSelected}");
                           _expenses = true;
-                          
                         } else {
-                           developer.log("${isSelected[buttonIndex] = buttonIndex == index}");
+                          developer.log(
+                              "${isSelected[buttonIndex] = buttonIndex == index}");
                           _expenses = false;
                         }
                       }
@@ -234,6 +260,7 @@ class _AddWidgetState extends State<AddWidget> {
                                 color: Colors.grey.withOpacity(0.2))
                           ]),
                       child: TextField(
+                        focusNode: amountFocusNode,
                         decoration: InputDecoration(
                           hintText: 'Amount',
                           prefixIcon: Icon(
@@ -258,14 +285,9 @@ class _AddWidgetState extends State<AddWidget> {
                                     decimal: true),
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(
-                              RegExp(r'^(\d+)?\.?\d{0,2}'))
+                              RegExp(r'^(\d+)?\.?\d{0,3}'))
                         ],
                         controller: _amountController,
-                        onSubmitted: (String value) async {
-                          setState(() => _canSubmit =
-                              _dateController.text.isNotEmpty &&
-                                  value.isNotEmpty);
-                        },
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -383,10 +405,6 @@ class _AddWidgetState extends State<AddWidget> {
                                 border: InputBorder.none,
                               ),
                               controller: _dateController,
-                              onSubmitted: (String value) async {
-                                setState(() => _canSubmit = value.isNotEmpty &&
-                                    _amountController.text.isNotEmpty);
-                              },
                             ),
                           ),
                         ],
@@ -405,6 +423,7 @@ class _AddWidgetState extends State<AddWidget> {
                                 color: Colors.grey.withOpacity(0.2))
                           ]),
                       child: TextField(
+                        focusNode: nameFocusNode,
                         enableSuggestions: false,
                         decoration: InputDecoration(
                           hintText: 'Name',
@@ -444,6 +463,7 @@ class _AddWidgetState extends State<AddWidget> {
                                 color: Colors.grey.withOpacity(0.2))
                           ]),
                       child: TextField(
+                        focusNode: noteFocusNode,
                         enableSuggestions: false,
                         decoration: InputDecoration(
                           hintText: 'Note',
@@ -605,6 +625,32 @@ class _AddWidgetState extends State<AddWidget> {
                                   _canSubmit
                                       ? submitExpense(dataStateNotifier, ref)
                                       : null;
+
+                                  if (ref.watch(responseData) == true) {
+                              const snackBar = SnackBar(
+                                content:
+                                    Text('Transaction added successfully!'),
+                                backgroundColor: Colors.teal,
+                                behavior: SnackBarBehavior.floating,
+                              );
+
+                              // Find the ScaffoldMessenger in the widget tree
+                              // and use it to show a SnackBar.
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else {
+                              const snackBarSuccess = SnackBar(
+                                content: Text(
+                                    'Something went wrong try again please!'),
+                                backgroundColor: Colors.teal,
+                                behavior: SnackBarBehavior.floating,
+                              );
+
+                              // Find the ScaffoldMessenger in the widget tree
+                              // and use it to show a SnackBar.
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBarSuccess);
+                            }
                                 },
                                 child: Text(
                                   'Add',

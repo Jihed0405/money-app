@@ -49,7 +49,7 @@ class EditWidget extends ConsumerStatefulWidget {
 class EditWidgetState extends ConsumerState<EditWidget> {
   FocusNode noteFocusNode = FocusNode();
   FocusNode nameFocusNode = FocusNode();
-   FocusNode amountFocusNode = FocusNode();
+  FocusNode amountFocusNode = FocusNode();
   late TextEditingController _amountController;
   late TextEditingController _noteController;
   late TextEditingController _nameController;
@@ -93,25 +93,25 @@ class EditWidgetState extends ConsumerState<EditWidget> {
     });
     amountFocusNode.addListener(() {
       if (!amountFocusNode.hasFocus) {
-       if (_amountController.value.text != "") {
-                            ref.read(currentTransactionToEdit).amount =
-                                double.parse(_amountController.value.text);
-                          } else {
-                            ref.read(currentTransactionToEdit).amount = 0;
-                          }
+        if (_amountController.value.text != "") {
+          ref.read(currentTransactionToEdit).amount =
+              double.parse(_amountController.value.text);
+        } else {
+          ref.read(currentTransactionToEdit).amount = 0;
+        }
         method();
       }
     });
     _dateController = TextEditingController(
         text: '${ref.read(currentTransactionToEdit).date.formattedDate}');
-_expenses=false;
+    _expenses = false;
     super.initState();
   }
 
   void method() {
-    
     setState(() {
-      _canSubmit = (_amountController.value.text != "" &&   double.parse(_amountController.value.text)!=0&&
+      _canSubmit = (_amountController.value.text != "" &&
+          double.parse(_amountController.value.text) != 0 &&
           _nameController.value.text != "" &&
           _noteController.value.text != "");
     });
@@ -134,7 +134,6 @@ _expenses=false;
 
   void submitExpense() {
     final myModel = MyModel();
-    developer.log(dropdownValueExpenses);
     switch (_expenses) {
       case true:
         setState(() {
@@ -169,22 +168,20 @@ _expenses=false;
       dropdownValueExpenses = listCategory.first;
       dropdownValueIncome = listIncome.first;
     });
-     ref.read(currentPageIndex.notifier).state=0;
-          ref.read(visibleButtonProvider.notifier).state=true;
   }
 
   @override
   void dispose() {
-     noteFocusNode.dispose();
-   nameFocusNode.dispose();
+    noteFocusNode.dispose();
+    nameFocusNode.dispose();
     amountFocusNode.dispose();
     _noteController.dispose();
-     _amountController.dispose();
-      
-      _dateController.dispose();
-     
-      _nameController.dispose(); 
-         super.dispose();
+    _amountController.dispose();
+
+    _dateController.dispose();
+
+    _nameController.dispose();
+    super.dispose();
   }
 
   @override
@@ -204,9 +201,9 @@ _expenses=false;
         TransactionType.outflow) {
       isSelected = <bool>[false, true];
       setState(() {
-      _expenses = true;  
+        _expenses = true;
       });
-      
+
       if (listCategory
           .contains(ref.read(currentTransactionToEdit).categoryType)) {
         dropdownValueExpenses = ref.read(currentTransactionToEdit).categoryType;
@@ -216,9 +213,9 @@ _expenses=false;
     } else {
       isSelected = <bool>[true, false];
       setState(() {
-      _expenses = false;  
+        _expenses = false;
       });
-      
+
       if (listIncome
           .contains(ref.read(currentTransactionToEdit).categoryType)) {
         dropdownValueIncome = ref.read(currentTransactionToEdit).categoryType;
@@ -337,7 +334,7 @@ _expenses=false;
                                 color: Colors.grey.withOpacity(0.2))
                           ]),
                       child: TextField(
-                         focusNode: amountFocusNode,
+                        focusNode: amountFocusNode,
                         decoration: InputDecoration(
                           hintText: 'Amount',
                           prefixIcon: Icon(
@@ -370,15 +367,10 @@ _expenses=false;
                             if (value == "") {
                               ref.read(currentTransactionToEdit).amount = 0;
                             } else {
-                              developer.log("${double.parse(value)}");
                               ref.read(currentTransactionToEdit).amount =
                                   double.parse(value);
                             }
-                            //_canSubmit =
-                            //  _dateController.text.isNotEmpty && value != "";
                           });
-                          developer.log(
-                              "${ref.read(currentTransactionToEdit).amount}");
                         },
                       ),
                     ),
@@ -636,10 +628,14 @@ _expenses=false;
                                   setState(() {
                                     if (_expenses) {
                                       dropdownValueExpenses = value!;
-                                      ref.read(currentTransactionToEdit).categoryType=dropdownValueExpenses;
+                                      ref
+                                          .read(currentTransactionToEdit)
+                                          .categoryType = dropdownValueExpenses;
                                     } else {
                                       dropdownValueIncome = value!;
-                                       ref.read(currentTransactionToEdit).categoryType=dropdownValueIncome;
+                                      ref
+                                          .read(currentTransactionToEdit)
+                                          .categoryType = dropdownValueIncome;
                                     }
                                   });
                                 },
@@ -717,6 +713,31 @@ _expenses=false;
                               shadowColor: Colors.transparent),
                           onPressed: () {
                             _canSubmit ? submitExpense() : null;
+                            if (ref.watch(responseEditData) == true) {
+                              const snackBar = SnackBar(
+                                content:
+                                    Text('Transaction edited successfully!'),
+                                backgroundColor: Colors.teal,
+                                behavior: SnackBarBehavior.floating,
+                              );
+
+                              // Find the ScaffoldMessenger in the widget tree
+                              // and use it to show a SnackBar.
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else {
+                              const snackBarSuccess = SnackBar(
+                                content: Text(
+                                    'Something went wrong try again please!'),
+                                backgroundColor: Colors.teal,
+                                behavior: SnackBarBehavior.floating,
+                              );
+
+                              // Find the ScaffoldMessenger in the widget tree
+                              // and use it to show a SnackBar.
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBarSuccess);
+                            }
                           },
                           child: Text(
                             'Update',

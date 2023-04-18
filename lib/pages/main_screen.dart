@@ -9,8 +9,12 @@ import 'package:flutter_money_app/pages/home.dart';
 import 'package:flutter_money_app/pages/profile.dart';
 import 'package:flutter_money_app/pages/stats.dart';
 import 'package:flutter_money_app/pages/wallet.dart';
+import 'package:flutter_money_app/types/model.dart';
 import 'package:flutter_money_app/utils/constants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../data/transaction.dart';
+import '../types/period.dart';
 void main() {
   runApp(
     const ProviderScope(
@@ -128,8 +132,11 @@ var visible = false;
   }
 
   setTabs(index,ref) {
+    MyModel myModel=MyModel();
       ref.read(precedentPageIndex.notifier).state= ref.watch(currentPageIndex);
     ref.read(currentPageIndex.notifier).state=index;
-   
+    var filterResults = 
+     myModel.filterByPeriod(periods[ref.watch(selectedPeriodIndex)], 0,ref.watch(transactionProvider));
+      ref.read(expenses.notifier).state=filterResults[0]as List<Transaction>;
   }
 }

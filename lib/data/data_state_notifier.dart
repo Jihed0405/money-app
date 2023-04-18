@@ -10,6 +10,13 @@ import 'package:state_notifier/state_notifier.dart';
 import '../types/model.dart';
 import '../types/period.dart';
 
+final responseData = StateProvider<bool>((ref) {
+  return false;
+});
+final responseEditData = StateProvider<bool>((ref) {
+  return false;
+});
+
 final precedentPageIndex = StateProvider<int>((ref) {
   return 0;
 });
@@ -44,11 +51,8 @@ StateProvider<int> numberOfPages = StateProvider<int>((ref) {
   }
 });
 final expenses = StateProvider<List<Transaction>>((ref) {
-  var filterResults = ref
-      .read(transactionProvider.notifier)
-      .state
-      .filterByPeriod(periods[ref.watch(selectedPeriodIndex)], 0);
-  return filterResults[0] as List<Transaction>;
+
+  return [];
 });
 final expensesFiltered = StateProvider<List<Transaction>>((ref) {
   var filterResults = ref

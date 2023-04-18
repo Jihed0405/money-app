@@ -55,9 +55,15 @@ extension ExpensesExtension on List<Transaction> {
      return [expenses];
 
  }
- List filterZero() {
+ List filterExpenses() {
     List<Transaction> expenses = [];
-    expenses.length=0;
+  
+      forEach((element) {
+      if (element.transactionType==TransactionType.outflow) {
+        expenses.add(element);
+      }
+
+    });
      return [expenses];
 
  }

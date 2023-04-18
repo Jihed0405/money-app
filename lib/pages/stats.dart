@@ -10,15 +10,12 @@ import '../charts/weekly_chart.dart';
 import '../charts/yearly_chart.dart';
 import '../data/transaction.dart';
 import '../data/user_info.dart';
+import '../types/model.dart';
 import '../types/period.dart';
 import '../utils/constants.dart';
 import '../widget/transaction_widget.dart';
 
-const List<String> _listFilter = <String>[
-  'Day',
-  'Week',
-  'Month',
-];
+
 const List<String> _listCategory = <String>[
   'All',
   'Fashion',
@@ -39,6 +36,9 @@ class Stats extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+      
+      
+   
     void setStateValues(int page) {
       var filterResults = ref
           .read(transactionProvider.notifier)
@@ -61,6 +61,9 @@ class Stats extends ConsumerWidget {
     final List<Transaction> transactionList = ref.watch(transactionProvider);
 
     double defaultWidth = MediaQuery.of(context).size.width;
+    final myModel= MyModel();
+   
+      
     return Scaffold(
       backgroundColor: const Color.fromARGB(0, 0, 0, 0),
       /* body: Padding(
@@ -381,5 +384,7 @@ class Stats extends ConsumerWidget {
                */
       //]
     );
+        
+    
   }
 }
