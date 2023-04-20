@@ -9,6 +9,15 @@ import 'package:state_notifier/state_notifier.dart';
 
 import '../types/model.dart';
 import '../types/period.dart';
+final incomeType = StateProvider<bool>((ref) {
+  return false;
+});
+final outcomeType = StateProvider<bool>((ref) {
+  return false;
+});
+final allTransactions = StateProvider<bool>((ref) {
+  return false;
+});
 
 final responseData = StateProvider<bool>((ref) {
   return false;
@@ -53,6 +62,14 @@ StateProvider<int> numberOfPages = StateProvider<int>((ref) {
 final expenses = StateProvider<List<Transaction>>((ref) {
 
   return [];
+});
+final expensesTransactions = StateProvider<List<Transaction>>((ref) {
+
+  return ref.watch(transactionProvider).filterExpenses()[0];
+});
+final incomeTransactions = StateProvider<List<Transaction>>((ref) {
+
+  return ref.watch(transactionProvider).filterIncome()[0];
 });
 final todayTransactions = StateProvider<List<Transaction>>((ref){
  

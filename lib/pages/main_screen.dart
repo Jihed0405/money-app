@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_money_app/data/data_state_notifier.dart';
 import 'package:flutter_money_app/pages/EditWidget.dart';
 import 'package:flutter_money_app/pages/add.dart';
@@ -37,54 +38,58 @@ var visible = false;
       return Consumer(
        builder: (context, ref, child) {
         
-        return Scaffold(
-          body: getBody(ref),
-          floatingActionButton:Consumer(
-            builder: (context, ref, child) {
-              final ButtonProvider = ref.watch(visibleButtonProvider);
-              return Visibility(
-            visible: ButtonProvider,
-            child: FloatingActionButton(
-              child: Container(
-                width: 60,
-                height: 60,
-                decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                        begin: Alignment.bottomRight,
-                        end: Alignment.topLeft,
-                        stops: [
-                          0.1,
-                          0.15,
-                          0.4,
-                          0.8,
-                        ],
-                        colors: [
-                          Color(0xFF35a6e5),
-                          Color(0xFF42a0e8),
-                          Color(0xFFd676db),
-                          Color(0xFFf88568)
-                        ])),
-                child: const Icon(Icons.add),
+        return AnnotatedRegion<SystemUiOverlayStyle>(value: const SystemUiOverlayStyle(
+      statusBarColor: Colors.white,
+  ),
+          child: Scaffold(
+            body: getBody(ref),
+            floatingActionButton:Consumer(
+              builder: (context, ref, child) {
+                final ButtonProvider = ref.watch(visibleButtonProvider);
+                return Visibility(
+              visible: ButtonProvider,
+              child: FloatingActionButton(
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                          begin: Alignment.bottomRight,
+                          end: Alignment.topLeft,
+                          stops: [
+                            0.1,
+                            0.15,
+                            0.4,
+                            0.8,
+                          ],
+                          colors: [
+                            Color(0xFF35a6e5),
+                            Color(0xFF42a0e8),
+                            Color(0xFFd676db),
+                            Color(0xFFf88568)
+                          ])),
+                  child: const Icon(Icons.add),
+                ),
+                //backgroundColor: LinearGradient(colors: [Color(0xFFce68f8),Color(0xFF8086f2),Color(0xFFf18991),Color(0xFFf48d87)),
+                onPressed: () {
+                  setTabs(4,ref);
+                  ref.read(visibleButtonProvider.notifier).state=false;
+                },
               ),
-              //backgroundColor: LinearGradient(colors: [Color(0xFFce68f8),Color(0xFF8086f2),Color(0xFFf18991),Color(0xFFf48d87)),
-              onPressed: () {
-                setTabs(4,ref);
-                ref.read(visibleButtonProvider.notifier).state=false;
-              },
-            ),
-          );}),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-          bottomNavigationBar:Consumer(
-            builder: (context, ref, child) {
-              final ButtonProvider = ref.watch(visibleButtonProvider); 
-          return getFooter(ref);})
-        
-        
-        
-        
-        
-        
+            );}),
+            floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+            bottomNavigationBar:Consumer(
+              builder: (context, ref, child) {
+                final ButtonProvider = ref.watch(visibleButtonProvider); 
+            return getFooter(ref);})
+          
+          
+          
+          
+          
+          
+          ),
         );
   },);
     
@@ -137,5 +142,9 @@ var visible = false;
     var filterResults = 
      myModel.filterByPeriod(periods[ref.watch(selectedPeriodIndex)], 0,ref.watch(transactionProvider));
       ref.read(expenses.notifier).state=filterResults[0]as List<Transaction>;
+       if(ref.watch(precedentPageIndex)!=ref.watch(currentPageIndex)) {ref.read(incomeType.notifier).state=false;
+                     ref.read(outcomeType.notifier).state=false;
+                     ref.read(allTransactions.notifier).state=false;
+                     }
   }
 }

@@ -64,7 +64,7 @@ class Stats extends ConsumerWidget {
    
       
     return Scaffold(
-      backgroundColor: const Color.fromARGB(0, 0, 0, 0),
+  backgroundColor: background,
       /* body: Padding(
         padding: const EdgeInsets.all(defaultSpacing),
         child: Column(
