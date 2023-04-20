@@ -62,9 +62,26 @@ class TransactionWidget extends ConsumerWidget {
             label: 'Delete',
             flex: 1,
             onPressed:(BuildContext context){
-               ref.read(currentTransactionToEdit.notifier).state=transaction;
+              showDialog<String>(
+                context:context,
+                builder:(BuildContext context) =>AlertDialog(
+                  title: const Text('Are you sure?'),
+                  content: const Text('this action cannot be undone.'),
+                  actions: <Widget>[
+                    TextButton(onPressed:()=>Navigator.pop(context,'Cancel'),
+                     child: const Text('Cancel')),
+                     TextButton(onPressed: (){
+                      ref.read(currentTransactionToEdit.notifier).state=transaction;
                  final myModel = MyModel();
-    myModel.deleteTransaction(ref);
+    myModel.deleteTransaction(ref); 
+    Navigator.pop(context,'Delete data');
+                     },
+                      child: const Text("Delete data"),),
+                  ],
+                ),
+              );
+
+               /* */
             }),
          ]),
                 child: ListTile(

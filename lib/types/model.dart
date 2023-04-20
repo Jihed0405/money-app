@@ -37,6 +37,8 @@ Transaction t =Transaction(transaction['id'],
    var yesterdayTrans=filterYesterday(ref.watch(transactionProvider));
  ref.read(todayTransactions.notifier).state= todayTrans[0];
 ref.read(yesterdayTransactions.notifier).state=yesterdayTrans[0];
+ref.read(expensesTransactions.notifier).state=filterExpenses(ref.watch(transactionProvider))[0];
+ref.read(incomeTransactions.notifier).state=filterIncome(ref.watch(transactionProvider))[0];
   } catch (e) {
     print("error is $e ");
   }};
@@ -156,12 +158,12 @@ final http.Response response = await http.delete(Uri.parse(deleteUrl),
         DateTime(startDate.year, startDate.month, startDate.day, 0, 0, 0);
     endDate = DateTime(endDate.year, endDate.month, endDate.day, 23, 59, 59);
 
-    list.forEach((element) {
+    for (var element in list) {
       if (element.date.isBetween(startDate, endDate)&&element.transactionType==TransactionType.outflow) {
         expenses.add(element);
       }
 
-    });
+    }
 
     return [expenses, startDate, endDate];
   }
@@ -169,25 +171,49 @@ final http.Response response = await http.delete(Uri.parse(deleteUrl),
 List filterToday(List<Transaction>list) {
     List<Transaction> expenses = [];
   
-      list.forEach((element) {
+      for (var element in list) {
       if (element.date.isToday()) {
         expenses.add(element);
       }
 
-    });
+    }
      return [expenses];
 
  }
  List filterYesterday(List<Transaction>list) {
     List<Transaction> expenses = [];
   
-      list.forEach((element) {
+      for (var element in list) {
       if (element.date.isYesterday()) {
         expenses.add(element);
       }
 
-    });
+    }
      return [expenses];
+
+ }
+ List filterExpenses(List<Transaction>list) {
+    List<Transaction> expenses = [];
+  
+      for (var element in list) {
+      if (element.transactionType==TransactionType.outflow) {
+        expenses.add(element);
+      }
+
+    }
+     return [expenses];
+
+ }
+  List filterIncome(List<Transaction>list) {
+    List<Transaction> incomes = [];
+  
+      list.forEach((element) {
+      if (element.transactionType==TransactionType.inflow) {
+        incomes.add(element);
+      }
+
+    });
+     return [incomes];
 
  }
 }

@@ -65,11 +65,11 @@ final expenses = StateProvider<List<Transaction>>((ref) {
 });
 final expensesTransactions = StateProvider<List<Transaction>>((ref) {
 
-  return ref.watch(transactionProvider).filterExpenses()[0];
+ return [];
 });
 final incomeTransactions = StateProvider<List<Transaction>>((ref) {
 
-  return ref.watch(transactionProvider).filterIncome()[0];
+  return [];
 });
 final todayTransactions = StateProvider<List<Transaction>>((ref){
  

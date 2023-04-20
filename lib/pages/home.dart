@@ -20,7 +20,7 @@ class Home extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
 
   
-   final List<Transaction> transactionList = ref.watch(transactionProvider);
+
   final mymodel= MyModel();
   return FutureBuilder(
     future: mymodel.fetchData(ref),
