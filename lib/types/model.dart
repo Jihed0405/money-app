@@ -29,7 +29,7 @@ class MyModel {
               transaction['itemName'],
               double.parse(transaction['amount']),
               DateTime.parse(transaction['date']));
-          ref.read(transactionProvider.notifier).state.add(t);
+          ref.read(transactionProvider.notifier).state.insert(0,t);
         });
         //data=json.decode(data);
         var todayTrans = filterToday(ref.watch(transactionProvider));
