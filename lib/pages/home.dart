@@ -21,9 +21,9 @@ class Home extends ConsumerWidget {
 
   
 
-  final mymodel= MyModel();
+  final myModel= MyModel();
   return FutureBuilder(
-    future: mymodel.fetchData(ref),
+    future: myModel.fetchData(ref),
     
     builder: (BuildContext context, AsyncSnapshot snapshot) {
      return Scaffold(

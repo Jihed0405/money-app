@@ -10,7 +10,6 @@ import '../utils/constants.dart';
 import '../widget/custom_toggle.dart';
 import 'dart:async';
 
-
 const List<String> listCategory = <String>[
   'Fashion',
   'Grocery',
@@ -132,7 +131,7 @@ class EditWidgetState extends ConsumerState<EditWidget> {
     }
   }
 
-  void submitExpense() {
+  void submitExpense(context) {
     final myModel = MyModel();
     switch (_expenses) {
       case true:
@@ -157,8 +156,8 @@ class EditWidgetState extends ConsumerState<EditWidget> {
         double.parse(_amountController.value.text),
         _selectedDate);
 
-    myModel.editData(transaction, ref);
-   
+    myModel.editData(context, transaction, ref);
+
     setState(() {
       _amountController.clear();
       dropdownValueRecurrence = listRecurrence.first;
@@ -190,7 +189,6 @@ class EditWidgetState extends ConsumerState<EditWidget> {
     double defaultHeight = MediaQuery.of(context).size.height;
     _amountController = TextEditingController(
         text: '${ref.watch(currentTransactionToEdit).amount}');
-    final state = ref.watch(currentTransactionToEdit).itemName;
     _nameController = TextEditingController(
         text: ref.watch(currentTransactionToEdit).itemCategoryName);
     _noteController = TextEditingController(
@@ -230,26 +228,26 @@ class EditWidgetState extends ConsumerState<EditWidget> {
         child: Column(
           children: [
             AppBar(
-              centerTitle: true,
-              title: Text(
-                " Edit Expenses",
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge
-                    ?.copyWith(fontWeight: FontWeight.w700),
-              ),
-              elevation: 0,
-              backgroundColor: background,
-              leading: IconButton(
-              icon:const Icon(
-                Icons.arrow_back_ios,
-                color: fontDark,
-              ),    onPressed: () {
+                centerTitle: true,
+                title: Text(
+                  " Edit Expenses",
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge
+                      ?.copyWith(fontWeight: FontWeight.w700),
+                ),
+                elevation: 0,
+                backgroundColor: background,
+                leading: IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back_ios,
+                      color: fontDark,
+                    ),
+                    onPressed: () {
                       ref.read(currentPageIndex.notifier).state =
                           ref.watch(precedentPageIndex);
-                         ref.read(visibleButtonProvider.notifier).state=true;    
-                    })
-            ),
+                      ref.read(visibleButtonProvider.notifier).state = true;
+                    })),
             const SizedBox(
               height: defaultSpacing,
             ),
@@ -538,7 +536,11 @@ class EditWidgetState extends ConsumerState<EditWidget> {
                           border: InputBorder.none,
                         ),
                         controller: _nameController,
-                        onSubmitted: (String value) async {},
+                        onSubmitted: (String value) async {
+                           ref.read(currentTransactionToEdit).itemCategoryName =
+            _nameController.value.text;
+            method();
+                        },
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -574,7 +576,11 @@ class EditWidgetState extends ConsumerState<EditWidget> {
                         ),
                         controller: _noteController,
 
-                        // onSubmitted: (String? value) async {},
+                         onSaved: (String? value) async {
+                           ref.read(currentTransactionToEdit).itemName =
+            _noteController.value.text;
+        method();
+                         },
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -717,34 +723,7 @@ class EditWidgetState extends ConsumerState<EditWidget> {
                               backgroundColor: Colors.transparent,
                               shadowColor: Colors.transparent),
                           onPressed: () {
-                            _canSubmit ? submitExpense() : null;
-                            if (ref.watch(responseEditData) == true) {
-                              const snackBar = SnackBar(
-                                content:
-                                    Text('Transaction edited successfully!'),
-                                backgroundColor: Colors.teal,
-                                behavior: SnackBarBehavior.floating,
-                                duration: Duration(seconds: 20),
-                              );
-
-                              // Find the ScaffoldMessenger in the widget tree
-                              // and use it to show a SnackBar.
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                            } else {
-                              const snackBarSuccess = SnackBar(
-                                content: Text(
-                                    'Something went wrong try again please!'),
-                                backgroundColor: Colors.teal,
-                                behavior: SnackBarBehavior.floating,
-                                duration: Duration(seconds: 20)
-                              );
-
-                              // Find the ScaffoldMessenger in the widget tree
-                              // and use it to show a SnackBar.
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBarSuccess);
-                            }
+                            _canSubmit ? submitExpense(context) : null;
                           },
                           child: Text(
                             'Update',

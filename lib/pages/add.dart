@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
+import 'dart:developer' as developer;
 import 'package:flutter/services.dart';
 import 'package:flutter_money_app/data/transaction.dart';
 import 'package:flutter_money_app/extensions/date_extensions.dart';
@@ -40,13 +40,13 @@ const List<String> listRecurrence = <String>[
   'yearly'
 ];
 
-class AddWidget extends StatefulWidget {
-  AddWidget({Key? key}) : super(key: key);
+class AddWidget extends ConsumerStatefulWidget {
+  const AddWidget({Key? key}) : super(key: key);
   @override
-  State<AddWidget> createState() => _AddWidgetState();
+  AddWidgetState createState() => AddWidgetState();
 }
 
-class _AddWidgetState extends State<AddWidget> {
+class AddWidgetState extends ConsumerState<AddWidget> {
   List<bool> isSelected = <bool>[true, false];
   bool _expenses = false;
   bool _canSubmit = false;
@@ -80,8 +80,12 @@ class _AddWidgetState extends State<AddWidget> {
   String dropdownValueExpenses = listCategory.first;
   String dropdownValueIncome = listIncome.first;
   String dropdownValueRecurrence = listRecurrence.first;
+  late bool showSnack;
+  late bool showSnackbar;
   @override
   void initState() {
+    showSnack = false;
+    showSnackbar = false;
     super.initState();
     noteFocusNode.addListener(() {
       if (!noteFocusNode.hasFocus) {
@@ -123,8 +127,9 @@ class _AddWidgetState extends State<AddWidget> {
     super.dispose();
   }
 
-  void submitExpense(DataStateNotifier dataStateNotifier, WidgetRef ref) {
-    final mymodel = MyModel();
+  void submitExpense(
+      context, DataStateNotifier dataStateNotifier, WidgetRef ref) {
+    final myModel = MyModel();
     switch (_expenses) {
       case true:
         setState(() {
@@ -146,7 +151,7 @@ class _AddWidgetState extends State<AddWidget> {
         _noteController.value.text,
         double.parse(_amountController.value.text),
         _selectedDate);
-    mymodel.postData(transaction, ref);
+    myModel.postData(context, transaction, ref);
 
     setState(() {
       _amountController.clear();
@@ -164,7 +169,9 @@ class _AddWidgetState extends State<AddWidget> {
   Widget build(BuildContext context) {
     double defaultWidth = MediaQuery.of(context).size.width;
     double defaultHeight = MediaQuery.of(context).size.height;
-
+    ref.listen(responseData, (previousResponse, newResponse) {
+      developer.log("the data changed , $newResponse");
+    });
     return SingleChildScrollView(
       child: SafeArea(
         top: true,
@@ -190,7 +197,7 @@ class _AddWidgetState extends State<AddWidget> {
                     onPressed: () {
                       ref.read(currentPageIndex.notifier).state =
                           ref.watch(precedentPageIndex);
-                         ref.read(visibleButtonProvider.notifier).state=true;    
+                      ref.read(visibleButtonProvider.notifier).state = true;
                     },
                   ));
             }),
@@ -207,10 +214,8 @@ class _AddWidgetState extends State<AddWidget> {
                           buttonIndex++) {
                         isSelected[buttonIndex] = buttonIndex == index;
                         if (index == 1) {
-                         
                           _expenses = true;
                         } else {
-                       
                           _expenses = false;
                         }
                       }
@@ -623,34 +628,9 @@ class _AddWidgetState extends State<AddWidget> {
                                     shadowColor: Colors.transparent),
                                 onPressed: () {
                                   _canSubmit
-                                      ? submitExpense(dataStateNotifier, ref)
+                                      ? submitExpense(
+                                          context, dataStateNotifier, ref)
                                       : null;
-
-                                  if (ref.watch(responseData) == true) {
-                              const snackBar = SnackBar(
-                                content:
-                                    Text('Transaction added successfully!'),
-                                backgroundColor: Colors.teal,
-                                behavior: SnackBarBehavior.floating,
-                              );
-
-                              // Find the ScaffoldMessenger in the widget tree
-                              // and use it to show a SnackBar.
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                            } else {
-                              const snackBarSuccess = SnackBar(
-                                content: Text(
-                                    'Something went wrong try again please!'),
-                                backgroundColor: Colors.teal,
-                                behavior: SnackBarBehavior.floating,
-                              );
-
-                              // Find the ScaffoldMessenger in the widget tree
-                              // and use it to show a SnackBar.
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBarSuccess);
-                            }
                                 },
                                 child: Text(
                                   'Add',

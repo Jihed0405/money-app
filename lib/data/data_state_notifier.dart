@@ -19,7 +19,7 @@ final allTransactions = StateProvider<bool>((ref) {
   return false;
 });
 
-final responseData = StateProvider<bool>((ref) {
+final responseData = StateProvider((ref) {
   return false;
 });
 final responseEditData = StateProvider<bool>((ref) {
