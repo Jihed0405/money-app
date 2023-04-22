@@ -55,26 +55,29 @@ class Home extends ConsumerWidget {
                       ref.read(allTransactions.notifier).state=true;
                        ref.read(incomeType.notifier).state=false;
                        ref.read(outcomeType.notifier).state=false;},
-                  child: Center(
-                    child: Column(children: [
-                      Text(
-                        "\$ ${formatNumber(ref.watch(transactionProvider).sumIncome()-ref.watch(transactionProvider).sumExpense())}",
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge
-                            ?.copyWith(fontSize: 28, fontWeight: FontWeight.w700),
-                      ),
-                      const SizedBox(
-                        height: defaultSpacing / 2,
-                      ),
-                      Text(
-                        "Total balance",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: fontSubHeading),
-                      )
-                    ]),
+                  child: Container(
+                    color: background,
+                    child: Center(
+                      child: Column(children: [
+                        Text(
+                          "\$ ${formatNumber(ref.watch(transactionProvider).sumIncome()-ref.watch(transactionProvider).sumExpense())}",
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge
+                              ?.copyWith(fontSize: 28, fontWeight: FontWeight.w700),
+                        ),
+                        const SizedBox(
+                          height: defaultSpacing / 2,
+                        ),
+                        Text(
+                          "Total balance",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(color: fontSubHeading),
+                        )
+                      ]),
+                    ),
                   ),
                 ),
                 const SizedBox(

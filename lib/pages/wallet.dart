@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_money_app/pages/profile.dart';
@@ -61,9 +61,10 @@ class Wallet extends ConsumerWidget {
                         borderRadius:
                             const BorderRadius.all(Radius.circular(defaultRadius)),
                         child: Image.asset(
-                          fit: BoxFit.contain,
+                      fit:  Platform.isAndroid||Platform.isIOS?BoxFit.contain:null,
+                        width:Platform.isWindows?400:800,
                           "assets/images/wallet.jpg",
-                          width: 800,
+                      
                         ),
                       ),
                  ),

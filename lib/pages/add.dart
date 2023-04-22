@@ -314,14 +314,16 @@ class AddWidgetState extends ConsumerState<AddWidget> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: defaultSpacing, top: defaultSpacing / 2),
-                            child: Text("Recurrence",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge!
-                                    .copyWith(color: fontSubHeading)),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: defaultSpacing, top: defaultSpacing/4),
+                              child: Text("Recurrence",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(color: fontSubHeading)),
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(defaultSpacing / 30),
@@ -509,14 +511,16 @@ class AddWidgetState extends ConsumerState<AddWidget> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: defaultSpacing, top: defaultSpacing / 2),
-                            child: Text("Category",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge!
-                                    .copyWith(color: fontSubHeading)),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: defaultSpacing, top: defaultSpacing / 6),
+                              child: Text("Category",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(color: fontSubHeading)),
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(defaultSpacing / 30),

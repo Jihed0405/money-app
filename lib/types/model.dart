@@ -133,9 +133,10 @@ class MyModel {
         }),
       );
       if (response.statusCode == 200) {
+        ref.invalidate(transactionProvider);
         ref.read(responseEditData.notifier).state = true;
 
-        ref.invalidate(transactionProvider);
+       
         if (ref.watch(responseEditData)) {
           ScaffoldMessenger.of(context).showSnackBar(snackBarSuccessEdit);
         } else {
