@@ -15,6 +15,7 @@ class MyModel {
   Future fetchData(ref) async {
     if (ref.watch(transactionProvider).length == 0) {
       try {
+
         http.Response response = await http.get(uri);
         var data = json.decode(response.body);
         data.forEach((transaction) {
@@ -29,9 +30,12 @@ class MyModel {
               transaction['itemName'],
               double.parse(transaction['amount']),
               DateTime.parse(transaction['date']));
-          ref.read(transactionProvider.notifier).state.insert(0,t);
+        ref.read(transactionProvider.notifier).state.insert(0,t);
+        
         });
         //data=json.decode(data);
+         var listVerify=ref.watch(transactionProvider);
+        developer.log("the value of listVerify is $listVerify");
         var todayTrans = filterToday(ref.watch(transactionProvider));
         var yesterdayTrans = filterYesterday(ref.watch(transactionProvider));
         ref.read(todayTransactions.notifier).state = todayTrans[0];
@@ -80,6 +84,7 @@ class MyModel {
       );
       if (response.statusCode == 201) {
         ref.invalidate(transactionProvider);
+      
         ref.read(responseData.notifier).state = true;
 
         if (ref.watch(responseData)) {
@@ -93,6 +98,7 @@ class MyModel {
       }
     } catch (e) {
       print("Error is $e");
+     
       ref.read(responseData.notifier).state = false;
       ScaffoldMessenger.of(context).showSnackBar(snackBarError);
     }
