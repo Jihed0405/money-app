@@ -18,6 +18,7 @@ class Home extends ConsumerWidget {
   var listeVisible;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+var list =ref.watch(transactionProvider);
 
   
 
@@ -26,6 +27,7 @@ class Home extends ConsumerWidget {
     future: myModel.fetchData(ref),
     
     builder: (BuildContext context, AsyncSnapshot snapshot) {
+     
      return Scaffold(
       backgroundColor: background,
        body: SafeArea(

@@ -9,6 +9,9 @@ import 'package:state_notifier/state_notifier.dart';
 
 import '../types/model.dart';
 import '../types/period.dart';
+final geTed = StateProvider<bool>((ref) {
+  return false;
+});
 final incomeType = StateProvider<bool>((ref) {
   return false;
 });
@@ -126,6 +129,9 @@ class DataStateNotifier extends StateNotifier<List<Transaction>> {
 
 }
 
-// The Transaction Provider
+// The Transaction Provider 
 final StateNotifierProvider<DataStateNotifier, List<Transaction>>
-    transactionProvider = StateNotifierProvider((ref) => DataStateNotifier());
+    transactionProvider = StateNotifierProvider((ref) {
+
+return DataStateNotifier();
+    } );

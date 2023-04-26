@@ -13,11 +13,14 @@ import 'package:flutter_money_app/extensions/expenses_extensions.dart';
 
 class MyModel {
   Future fetchData(ref) async {
-    if (ref.watch(transactionProvider).length == 0) {
-      try {
+   
+     if (!(ref.watch(geTed) )&&ref.watch(transactionProvider).isEmpty) {
 
+      try {
+        developer.log("in the function");
         http.Response response = await http.get(uri);
         var data = json.decode(response.body);
+        
         data.forEach((transaction) {
           var type = transaction['type'] == "O"
               ? TransactionType.outflow
@@ -31,11 +34,9 @@ class MyModel {
               double.parse(transaction['amount']),
               DateTime.parse(transaction['date']));
         ref.read(transactionProvider.notifier).state.insert(0,t);
-        
+      
         });
-        //data=json.decode(data);
-         var listVerify=ref.watch(transactionProvider);
-        developer.log("the value of listVerify is $listVerify");
+       
         var todayTrans = filterToday(ref.watch(transactionProvider));
         var yesterdayTrans = filterYesterday(ref.watch(transactionProvider));
         ref.read(todayTransactions.notifier).state = todayTrans[0];
@@ -44,11 +45,13 @@ class MyModel {
             filterExpenses(ref.watch(transactionProvider))[0];
         ref.read(incomeTransactions.notifier).state =
             filterIncome(ref.watch(transactionProvider))[0];
+           ref.read(geTed.notifier).state=true;
+          
       } catch (e) {
         print("error is $e ");
       }
     }
-    ;
+    
   }
 
   void postData(context, Transaction data, ref) async {
@@ -82,9 +85,10 @@ class MyModel {
           "date": data.date.toIso8601String()
         }),
       );
+      developer.log("in the post : ${response.statusCode}");
       if (response.statusCode == 201) {
         ref.invalidate(transactionProvider);
-      
+      ref.read(geTed.notifier).state=false;
         ref.read(responseData.notifier).state = true;
 
         if (ref.watch(responseData)) {
@@ -140,8 +144,8 @@ class MyModel {
       );
       if (response.statusCode == 200) {
         ref.invalidate(transactionProvider);
-        ref.read(responseEditData.notifier).state = true;
-
+        ref.read(responseEditData.notifier).state = false;
+        ref.read(geTed.notifier).state=false;
        
         if (ref.watch(responseEditData)) {
           ScaffoldMessenger.of(context).showSnackBar(snackBarSuccessEdit);
@@ -171,6 +175,7 @@ class MyModel {
       );
       if (response.statusCode == 204) {
         ref.invalidate(transactionProvider);
+        ref.read(geTed.notifier).state=false;
       } else {
         throw Exception("Failed to delete transaction");
       }
