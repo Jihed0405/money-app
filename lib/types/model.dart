@@ -14,9 +14,9 @@ import 'package:flutter_money_app/extensions/expenses_extensions.dart';
 class MyModel {
   Future fetchData(ref) async {
    
-     if (!(ref.watch(geTed) )&&ref.watch(transactionProvider).isEmpty) {
+if ((!ref.watch(geTed))&&ref.watch(transactionProvider).length == 0) {
 
-      try {
+    
         developer.log("in the function");
         http.Response response = await http.get(uri);
         var data = json.decode(response.body);
@@ -33,23 +33,24 @@ class MyModel {
               transaction['itemName'],
               double.parse(transaction['amount']),
               DateTime.parse(transaction['date']));
-        ref.read(transactionProvider.notifier).state.insert(0,t);
+             
+        ref.read(transactionProvider.notifier).state.add(t);
       
         });
-       
+        ref.read(geTed.notifier).state=true;        
         var todayTrans = filterToday(ref.watch(transactionProvider));
         var yesterdayTrans = filterYesterday(ref.watch(transactionProvider));
+        var allTrans= filterAll(ref.watch(transactionProvider));
+        ref.read(allTransactionsProviders.notifier).state=allTrans[0];
         ref.read(todayTransactions.notifier).state = todayTrans[0];
         ref.read(yesterdayTransactions.notifier).state = yesterdayTrans[0];
         ref.read(expensesTransactions.notifier).state =
             filterExpenses(ref.watch(transactionProvider))[0];
         ref.read(incomeTransactions.notifier).state =
             filterIncome(ref.watch(transactionProvider))[0];
-           ref.read(geTed.notifier).state=true;
+        
           
-      } catch (e) {
-        print("error is $e ");
-      }
+     
     }
     
   }
@@ -87,8 +88,8 @@ class MyModel {
       );
       developer.log("in the post : ${response.statusCode}");
       if (response.statusCode == 201) {
-        ref.invalidate(transactionProvider);
-      ref.read(geTed.notifier).state=false;
+       ref.read(geTed.notifier).state=false;
+ref.invalidate(transactionProvider);
         ref.read(responseData.notifier).state = true;
 
         if (ref.watch(responseData)) {
@@ -97,12 +98,14 @@ class MyModel {
           ScaffoldMessenger.of(context).showSnackBar(snackBarError);
         }
       } else {
+        ref.invalidate(transactionProvider);
         ref.read(responseData.notifier).state = false;
         ScaffoldMessenger.of(context).showSnackBar(snackBarError);
       }
     } catch (e) {
+      ref.invalidate(transactionProvider);
       print("Error is $e");
-     
+       ref.read(geTed.notifier).state=true;
       ref.read(responseData.notifier).state = false;
       ScaffoldMessenger.of(context).showSnackBar(snackBarError);
     }
@@ -143,9 +146,10 @@ class MyModel {
         }),
       );
       if (response.statusCode == 200) {
-        ref.invalidate(transactionProvider);
-        ref.read(responseEditData.notifier).state = false;
         ref.read(geTed.notifier).state=false;
+       ref.invalidate(transactionProvider);
+                 ref.read(responseEditData.notifier).state = false;
+       
        
         if (ref.watch(responseEditData)) {
           ScaffoldMessenger.of(context).showSnackBar(snackBarSuccessEdit);
@@ -153,12 +157,16 @@ class MyModel {
           ScaffoldMessenger.of(context).showSnackBar(snackBarErrorEdit);
         }
       } else {
+        ref.invalidate(transactionProvider);
         print("something goes wrong when editing new data");
         ref.read(responseEditData.notifier).state = false;
+          ref.read(geTed.notifier).state=true;
         ScaffoldMessenger.of(context).showSnackBar(snackBarErrorEdit);
       }
     } catch (e) {
+      ref.invalidate(transactionProvider);
       print("Error is $e");
+        ref.read(geTed.notifier).state=true;
       ref.read(responseEditData.notifier).state = false;
       ScaffoldMessenger.of(context).showSnackBar(snackBarErrorEdit);
     }
@@ -174,10 +182,13 @@ class MyModel {
         },
       );
       if (response.statusCode == 204) {
-        ref.invalidate(transactionProvider);
+        ref.read(geTed.notifier).state=false;
+      ref.invalidate(transactionProvider);
         ref.read(geTed.notifier).state=false;
       } else {
-        throw Exception("Failed to delete transaction");
+        ref.invalidate(transactionProvider);
+        print("Failed to delete transaction");
+        ref.read(geTed.notifier).state=false;
       }
     }
   }
@@ -224,7 +235,7 @@ class MyModel {
 
     for (var element in list) {
       if (element.date.isToday()) {
-        expenses.add(element);
+        expenses.insert(0,element);
       }
     }
     return [expenses];
@@ -235,7 +246,7 @@ class MyModel {
 
     for (var element in list) {
       if (element.date.isYesterday()) {
-        expenses.add(element);
+        expenses.insert(0,element);
       }
     }
     return [expenses];
@@ -246,7 +257,7 @@ class MyModel {
 
     for (var element in list) {
       if (element.transactionType == TransactionType.outflow) {
-        expenses.add(element);
+        expenses.insert(0,element);
       }
     }
     return [expenses];
@@ -257,9 +268,19 @@ class MyModel {
 
     list.forEach((element) {
       if (element.transactionType == TransactionType.inflow) {
-        incomes.add(element);
+        incomes.insert(0,element);
       }
     });
     return [incomes];
+  }
+  List filterAll(List<Transaction> list) {
+    List<Transaction> alList = [];
+
+    list.forEach((element) {
+      
+        alList.insert(0,element);
+    
+    });
+    return [alList];
   }
 }

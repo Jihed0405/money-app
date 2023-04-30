@@ -196,7 +196,7 @@ var list =ref.watch(transactionProvider);
                 const Center(
                 child: Text("no data found"),
               ),
-                ...ref.watch(transactionProvider).map(
+                ...ref.watch(allTransactionsProviders).map(
                     (transaction) =>TransactionWidget(transaction: transaction)),],
               ],
             ),

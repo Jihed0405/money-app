@@ -79,6 +79,12 @@ final todayTransactions = StateProvider<List<Transaction>>((ref){
  return [];
 
 });
+final allTransactionsProviders = StateProvider<List<Transaction>>((ref){
+ 
+ return [];
+
+});
+
 final yesterdayTransactions = StateProvider<List<Transaction>>((ref){
  return [];
 });
