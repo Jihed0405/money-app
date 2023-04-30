@@ -128,7 +128,7 @@ class AddWidgetState extends ConsumerState<AddWidget> {
   }
 
   void submitExpense(
-      context, DataStateNotifier dataStateNotifier, WidgetRef ref) {
+      context,  dataStateNotifier, WidgetRef ref) {
     final myModel = MyModel();
     switch (_expenses) {
       case true:
@@ -624,8 +624,8 @@ class AddWidgetState extends ConsumerState<AddWidget> {
                           ),
                           child: Consumer(
                             builder: (context, ref, child) {
-                              final DataStateNotifier dataStateNotifier =
-                                  ref.watch(transactionProvider.notifier);
+                              final  dataStateNotifier =
+                                  ref.watch(transactionProvider);
                               return ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.transparent,

@@ -66,6 +66,10 @@ final expenses = StateProvider<List<Transaction>>((ref) {
 
   return [];
 });
+final transactionProvider = StateProvider<List<Transaction>>((ref) {
+print('provider called');
+  return [];
+});
 final expensesTransactions = StateProvider<List<Transaction>>((ref) {
 
  return [];
@@ -136,8 +140,9 @@ class DataStateNotifier extends StateNotifier<List<Transaction>> {
 }
 
 // The Transaction Provider 
-final StateNotifierProvider<DataStateNotifier, List<Transaction>>
+/* final StateNotifierProvider<DataStateNotifier, List<Transaction>>
     transactionProvider = StateNotifierProvider((ref) {
 
 return DataStateNotifier();
-    } );
+    } ); */
+

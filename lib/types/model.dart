@@ -14,7 +14,7 @@ import 'package:flutter_money_app/extensions/expenses_extensions.dart';
 class MyModel {
   Future fetchData(ref) async {
    
-if ((!ref.watch(geTed))&&ref.watch(transactionProvider).length == 0) {
+if ((!ref.watch(geTed))&&(ref.watch(transactionProvider).length  == 0||(ref.watch(transactionProvider).state== []))) {
 
     
         developer.log("in the function");
@@ -90,6 +90,7 @@ if ((!ref.watch(geTed))&&ref.watch(transactionProvider).length == 0) {
       if (response.statusCode == 201) {
        ref.read(geTed.notifier).state=false;
 ref.invalidate(transactionProvider);
+
         ref.read(responseData.notifier).state = true;
 
         if (ref.watch(responseData)) {
@@ -148,6 +149,7 @@ ref.invalidate(transactionProvider);
       if (response.statusCode == 200) {
         ref.read(geTed.notifier).state=false;
        ref.invalidate(transactionProvider);
+  
                  ref.read(responseEditData.notifier).state = false;
        
        
@@ -158,15 +160,17 @@ ref.invalidate(transactionProvider);
         }
       } else {
         ref.invalidate(transactionProvider);
+         ref.read(geTed.notifier).state=true;
         print("something goes wrong when editing new data");
         ref.read(responseEditData.notifier).state = false;
-          ref.read(geTed.notifier).state=true;
+         
         ScaffoldMessenger.of(context).showSnackBar(snackBarErrorEdit);
       }
     } catch (e) {
       ref.invalidate(transactionProvider);
+              ref.read(geTed.notifier).state=true;
       print("Error is $e");
-        ref.read(geTed.notifier).state=true;
+
       ref.read(responseEditData.notifier).state = false;
       ScaffoldMessenger.of(context).showSnackBar(snackBarErrorEdit);
     }
@@ -184,11 +188,13 @@ ref.invalidate(transactionProvider);
       if (response.statusCode == 204) {
         ref.read(geTed.notifier).state=false;
       ref.invalidate(transactionProvider);
-        ref.read(geTed.notifier).state=false;
+      
+       
       } else {
         ref.invalidate(transactionProvider);
+            ref.read(geTed.notifier).state=true;
         print("Failed to delete transaction");
-        ref.read(geTed.notifier).state=false;
+    
       }
     }
   }
